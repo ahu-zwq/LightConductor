@@ -48,25 +48,25 @@
             <TextBlock Grid.Row="0" Grid.Column="6"  Text="镜子7" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
 
             <WindowsFormsHost Grid.Row="1" Grid.Column="0"  Name="pictureBoxHost1" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_1" BackColor="#FF595959"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_1" BorderStyle="FixedSingle" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="1"  Name="pictureBoxHost2" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_2" BackColor="#FF595959"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_2" BorderStyle="FixedSingle" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="2"  Name="pictureBoxHost3" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_3" BackColor="#FF595959"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_3" BorderStyle="FixedSingle" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="3"  Name="pictureBoxHost4" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_4" BackColor="#FF595959"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_4" BorderStyle="FixedSingle" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="4"  Name="pictureBoxHost5" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_5" BackColor="#FF595959"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_5" BorderStyle="FixedSingle" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="5"  Name="pictureBoxHost6" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_6" BackColor="#FF595959"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_6" BorderStyle="FixedSingle" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="6"  Name="pictureBoxHost7" Margin="5,1,5,5" >
-                <wf:PictureBox Name="PictureBox_7" BackColor="#FF595959"/>
+                <wf:PictureBox Name="PictureBox_7" BorderStyle="FixedSingle" BackColor="#FF595959"/>
             </WindowsFormsHost>
         </Grid>
 
@@ -81,7 +81,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Grid.Column="0" Background="#FF323232">
+            <Grid Grid.Row="0" Grid.Column="0" Background="#FF1E1E1E">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -104,10 +104,10 @@
                     <TextBlock Grid.Row="0" Grid.Column="1" Name="label_v2"  Margin="5,0,5,0" FontSize="20" Foreground="White"/>
 
                     <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="pictureBoxHost_v1" Margin="5,0,5,5" >
-                        <wf:PictureBox BackColor="#FF595959" Name="pictureBox_v1"/>
+                        <wf:PictureBox BackColor="#FF595959" BorderStyle="FixedSingle" Name="pictureBox_v1"/>
                     </WindowsFormsHost>
                     <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="pictureBoxHost_v2" Margin="5,0,5,5" >
-                        <wf:PictureBox BackColor="#FF595959" Name="pictureBox_v2"/>
+                        <wf:PictureBox BackColor="#FF595959" BorderStyle="FixedSingle" Name="pictureBox_v2"/>
                     </WindowsFormsHost>
 
                 </Grid>
