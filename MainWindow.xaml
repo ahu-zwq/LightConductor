@@ -11,7 +11,7 @@
         Title="Light Conductor" MinHeight="1000" MinWidth="1800" Icon="Resources/logo.ico" Background="#FF2D2D30">
 
 
-    <TabControl HorizontalContentAlignment="Stretch"  SelectionChanged="TabControl_SelectionChanged" Background="#FF2D2D30">
+    <TabControl HorizontalContentAlignment="Stretch" SelectionChanged="TabControl_SelectionChanged" Background="#FF323232">
 
         <TabItem Header="监控" FontSize="15" >
             <Frame Source="/LightConductor;component/Pages/Monitor.xaml"/>

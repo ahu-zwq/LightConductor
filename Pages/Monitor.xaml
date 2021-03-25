@@ -7,23 +7,22 @@
       mc:Ignorable="d" 
       xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
       xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
-      xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
       xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
       d:DesignHeight="1000" d:DesignWidth="1920"
       Title="Monitor">
 
 
-    <Grid >
-        <Grid.ColumnDefinitions>
+    <StackPanel >
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
 
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="228"/>
             <RowDefinition Height="760"/>
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions>-->
 
-        <Grid Grid.Row="0" Grid.Column="0">
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -35,8 +34,8 @@
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="15"/>
-                <RowDefinition Height="200"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="190"/>
             </Grid.RowDefinitions>
 
 
@@ -49,64 +48,66 @@
             <TextBlock Grid.Row="0" Grid.Column="6"  Text="镜子7" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
 
             <WindowsFormsHost Grid.Row="1" Grid.Column="0"  Name="pictureBoxHost1" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_1" BorderStyle="Fixed3D" BackColor="Black"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_1" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="1"  Name="pictureBoxHost2" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_2" BorderStyle="Fixed3D" BackColor="Black"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_2" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="2"  Name="pictureBoxHost3" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_3" BorderStyle="Fixed3D" BackColor="Black"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_3" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="3"  Name="pictureBoxHost4" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_4" BorderStyle="Fixed3D" BackColor="Black"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_4" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="4"  Name="pictureBoxHost5" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_5" BorderStyle="Fixed3D" BackColor="Black"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_5" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="5"  Name="pictureBoxHost6" Margin="5,1,5,5" >
-                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_6" BorderStyle="Fixed3D" BackColor="Black"/>
+                <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_6" BackColor="#FF595959"/>
             </WindowsFormsHost>
             <WindowsFormsHost Grid.Row="1" Grid.Column="6"  Name="pictureBoxHost7" Margin="5,1,5,5" >
-                <wf:PictureBox Name="PictureBox_7" BorderStyle="Fixed3D" BackColor="Black"/>
+                <wf:PictureBox Name="PictureBox_7" BackColor="#FF595959"/>
             </WindowsFormsHost>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0">
+        <Border Height="3" BorderBrush="LightGray" BorderThickness="0,0,0,2" Margin="0,0,0,5" />
+        
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="7*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="760"/>
+                <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Grid.Column="0">
+            <Grid Grid.Row="0" Grid.Column="0" Background="#FF323232">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="456"/>
-                    <RowDefinition Height="304"/>
+                    <RowDefinition Height="310"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Grid.Column="0">
+                <Grid Grid.Row="0" Grid.Column="0" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition Height="436"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="426"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Name="label_v1"  Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Name="label_v2"  Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Name="label_v1"  Margin="5,0,5,0" FontSize="20" Foreground="White"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Name="label_v2"  Margin="5,0,5,0" FontSize="20" Foreground="White"/>
 
                     <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="pictureBoxHost_v1" Margin="5,0,5,5" >
-                        <wf:PictureBox BorderStyle="Fixed3D" BackColor="Black" Name="pictureBox_v1"/>
+                        <wf:PictureBox BackColor="#FF595959" Name="pictureBox_v1"/>
                     </WindowsFormsHost>
                     <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="pictureBoxHost_v2" Margin="5,0,5,5" >
-                        <wf:PictureBox BorderStyle="Fixed3D" BackColor="Black" Name="pictureBox_v2"/>
+                        <wf:PictureBox BackColor="#FF595959" Name="pictureBox_v2"/>
                     </WindowsFormsHost>
 
                 </Grid>
@@ -267,7 +268,9 @@
 
             </Grid>
 
-            <Grid Grid.Row="0" Grid.Column="1">
+            <Border Grid.Row="0" Grid.Column="1" Background="#FF2C2C2C" BorderBrush="#FF333337" BorderThickness="5,5,5,5">
+            <Grid >
+                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -287,10 +290,10 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Button Content="重置基准点" Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Button Content="重置基准点" Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-                    <!--<Button x:Name="BtnTest" Content="重置基准点" pu:ButtonHelper.ButtonStyle="Standard" pu:ButtonHelper.CornerRadius="15" Height="30" Width="150"
-                            Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" FontSize="20"/>-->
+                    <!--<CheckBox Name="Checker" Grid.Row="0" Grid.Column="1" Style="{DynamicResource SliderCheckBox}" Content="{Binding ElementName=Checker1,Path=IsChecked}" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center" />-->
 
                 </Grid>
 
@@ -352,11 +355,11 @@
 
             </Grid>
 
-
+            </Border>
         </Grid>
 
 
 
 
-    </Grid>
+    </StackPanel>
 </Page>
