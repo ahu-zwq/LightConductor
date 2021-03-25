@@ -1,0 +1,37 @@
+﻿<Page x:Class="LightConductor.Pages.Setting_D"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:assembly="clr-namespace:System;assembly=mscorlib" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LightConductor.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Setting_D">
+
+
+    <Grid Margin="10">
+        <DataGrid x:Name="Setting_dg" ItemsSource="{Binding}" AutoGenerateColumns="False" 
+                       SelectionMode="Single" CanUserAddRows="False" FontSize="18" >
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="30" />
+                </Style>
+            </DataGrid.RowStyle>
+
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="序号" Width="*" Binding="{Binding Id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="名称" Width="3*" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="基准点" Width="3*" Binding="{Binding Datum_pos}" IsReadOnly="True" />
+                <DataGridTextColumn Header="垂直电机序列号" Width="4*" Binding="{Binding VerticalMotorSerialNo}"/>
+                <DataGridTextColumn Header="水平电机序列号" Width="4*" Binding="{Binding HorizontalMotorSerialNo}"/>
+                <DataGridTextColumn Header="摄像头IP" Width="3*" Binding="{Binding CameraIp}"/>
+                <DataGridTextColumn Header="摄像头端口" Width="2*" Binding="{Binding CameraPort}"/>
+                <DataGridTextColumn Header="摄像头用户名" Width="3*" Binding="{Binding CameraUserName}"/>
+                <DataGridTextColumn Header="摄像头密码" Width="3*" Binding="{Binding CameraPassword}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

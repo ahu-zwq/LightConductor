@@ -1,0 +1,35 @@
+﻿<Page x:Class="LightConductor.Pages.Setting_H"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LightConductor.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Setting_H">
+
+    <TabControl x:Name="tabControl" TabStripPlacement="Left" FontSize="20" Background="#FF2D2D30">
+        <TabItem Header="镜子1" >
+            <Frame Source="/LightConductor;component/Pages/Option.xaml"/>
+        </TabItem>
+        <TabItem Header="镜子2">
+            <Frame Source="/LightConductor;component/Pages/Option.xaml"/>
+        </TabItem>
+        <TabItem Header="镜子3">
+            <Frame Source="/LightConductor;component/Pages/Option.xaml"/>
+        </TabItem>
+        <TabItem Header="镜子4">
+            <Frame Source="/LightConductor;component/Pages/Option.xaml"/>
+        </TabItem>
+        <TabItem Header="镜子5">
+            <Frame Source="/LightConductor;component/Pages/Option.xaml"/>
+        </TabItem>
+        <TabItem Header="镜子6">
+            <Frame Source="/LightConductor;component/Pages/Option.xaml"/>
+        </TabItem>
+        <TabItem Header="镜子7">
+            <Frame Source="/LightConductor;component/Pages/Option.xaml"/>
+        </TabItem>
+        
+    </TabControl>
+</Page>

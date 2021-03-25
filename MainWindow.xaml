@@ -1,0 +1,26 @@
+﻿<Window x:Class="LightConductor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LightConductor"
+        mc:Ignorable="d"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Title="Light Conductor" MinHeight="1000" MinWidth="1800" Icon="Resources/logo.ico" Background="#FF2D2D30">
+
+
+    <TabControl HorizontalContentAlignment="Stretch"  SelectionChanged="TabControl_SelectionChanged" Background="#FF2D2D30">
+
+        <TabItem Header="监控" FontSize="15" >
+            <Frame Source="/LightConductor;component/Pages/Monitor.xaml"/>
+        </TabItem>
+
+        <TabItem Header="设置" FontSize="15" >
+            <Frame Source="/LightConductor;component/Pages/Setting_D.xaml"/>
+        </TabItem>
+    </TabControl>
+
+
+</Window>

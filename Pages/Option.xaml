@@ -1,0 +1,63 @@
+﻿<Page x:Class="LightConductor.Pages.Option"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LightConductor.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Option">
+
+    <Grid>
+        <Border Grid.Row="0" Grid.Column="0" Margin="5" BorderBrush="#FF686868"  BorderThickness="2">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="镜子1" Foreground="White" FontSize="20" Background="#FF2D2D30" Margin="0,30"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" Text="电机序列号（垂直）" Foreground="White" Canvas.Left="40" Canvas.Top="40" Background="#FF2D2D30" TextWrapping="Wrap" Margin="0,5"/>
+                <TextBox Grid.Row="2" Grid.Column="0" Text="" Margin="0,5" MaxWidth="200"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" Text="电机序列号（水平）" Foreground="White" Canvas.Left="40" Canvas.Top="40" Background="#FF2D2D30" TextWrapping="Wrap" Margin="0,5"/>
+                <TextBox Grid.Row="4" Grid.Column="0" Text="" Margin="0,5" MaxWidth="200"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center" Text="摄像头" Foreground="White" Canvas.Left="40" Canvas.Top="40" Background="#FF2D2D30" TextWrapping="Wrap" Margin="0,20,0,5"/>
+
+                <Grid Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="ip：" Foreground="White"  Background="#FF2D2D30" TextWrapping="Wrap" Margin="0,5" HorizontalAlignment="Right"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="" Margin="0,5" MinWidth="150" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="端口：" Foreground="White"  Background="#FF2D2D30" TextWrapping="Wrap" Margin="0,5" HorizontalAlignment="Right"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="" Margin="0,5" MinWidth="150" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="用户名：" Foreground="White"  Background="#FF2D2D30" TextWrapping="Wrap" Margin="0,5" HorizontalAlignment="Right"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="" Margin="0,5" MinWidth="150" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="密码：" Foreground="White"  Background="#FF2D2D30" TextWrapping="Wrap" Margin="0,5" HorizontalAlignment="Right"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="" Margin="0,5" MinWidth="150" HorizontalAlignment="Left"/>
+                </Grid>
+
+
+
+            </Grid>
+        </Border>
+    </Grid>
+</Page>
