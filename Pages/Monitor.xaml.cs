@@ -60,7 +60,6 @@ namespace LightConductor.Pages
         {
             InitializeComponent();
 
-            VideoHandle.Init();
 
             OpenAllCameraAndTDC();
 
@@ -215,6 +214,9 @@ namespace LightConductor.Pages
         private void OpenAllCameraAndTDC()
         {
             LogUtils.Log.Info("OpenAllCameraAndTDC");
+
+            VideoHandle.Init();
+
             List<DeviceModule> DeviceList = Setting_D.GetDeviceList();
             for (int i = 0; i < DeviceList.Count; i++)
             {
@@ -242,6 +244,8 @@ namespace LightConductor.Pages
         }
 
 
+
+
         private VideoHandle OpenCamera(DeviceModule device)
         {
             VideoHandle videoHandle = VideoHandle.GetVideoHandle(device.CameraIp);
@@ -266,7 +270,7 @@ namespace LightConductor.Pages
 
         private void PictureBox_Click(object sender, EventArgs e)
         {
-
+            cleanDetail();
             string PictureBoxName = (sender as System.Windows.Forms.PictureBox).Name;
             string v = PictureBoxName.Split('_')[1];
             int PictureBoxNum = int.Parse(v);
@@ -301,9 +305,8 @@ namespace LightConductor.Pages
             if (cameraPair != null)
             {
                 cameraPair.MainVideoHandle.StopRealPlay();
+                cameraPair.MainVideoHandle.RefreshPicture();
 
-                var picbox = pictureBoxHost.Child as System.Windows.Forms.PictureBox;
-                picbox.Image = null;
             }
         }
 
@@ -361,39 +364,50 @@ namespace LightConductor.Pages
 
         private void Save_Datum_Click(object sender, RoutedEventArgs e)
         {
-            LogUtils.Log.Info("重置基准点开始");
-            int count = CAMERA_PAIR_LIST.Count;
-            //List<DeviceModule> devices = Setting_D.GetDeviceList();
-            for (int i = 0; i < count; i++)
+            if (MessageBox.Show("确认重置基准点？", "重置基准点？", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
             {
-                CameraPair cameraPair = CAMERA_PAIR_LIST[i];
-                byte[] bytes = cameraPair.MainVideoHandle.btnJPEG_Byte();
-                //bool b = cameraPair.MainVideoHandle.btnJPEG_File(IMAGE_TEMP_PATH);
-                DeviceModule deviceModule = cameraPair.DeviceModule;
-                double Datum_x = Double.NaN;
-                double Datum_y = Double.NaN;
-                //if (File.Exists(IMAGE_TEMP_PATH) && b) 
-                if(bytes.Length > 0)
+                LogUtils.Log.Info("重置基准点开始");
+                int count = CAMERA_PAIR_LIST.Count;
+                //List<DeviceModule> devices = Setting_D.GetDeviceList();
+                for (int i = 0; i < count; i++)
                 {
-                    ImageDetail imageDetail = OpenCVUtils.getHighPoint(bytes);
-                    //ImageDetail imageDetail = OpenCVUtils.getHighPoint(IMAGE_TEMP_PATH);
-
-                    if (imageDetail.PX > 0 || imageDetail.PY > 0)
+                    CameraPair cameraPair = CAMERA_PAIR_LIST[i];
+                    byte[] bytes = cameraPair.MainVideoHandle.btnJPEG_Byte();
+                    //bool b = cameraPair.MainVideoHandle.btnJPEG_File(IMAGE_TEMP_PATH);
+                    DeviceModule deviceModule = cameraPair.DeviceModule;
+                    double Datum_x = Double.NaN;
+                    double Datum_y = Double.NaN;
+                    //if (File.Exists(IMAGE_TEMP_PATH) && b) 
+                    if (bytes.Length > 0)
                     {
-                        Datum_x = imageDetail.PX;
-                        Datum_y = SpotPosition.Max_Height - imageDetail.PY;
-                    }
-                }
-                deviceModule.Datum_x = Datum_x;
-                deviceModule.Datum_y = Datum_y;
-                deviceModule.updateConfig();
+                        ImageDetail imageDetail = OpenCVUtils.getHighPoint(bytes);
+                        //ImageDetail imageDetail = OpenCVUtils.getHighPoint(IMAGE_TEMP_PATH);
 
-                LogUtils.Log.Info(deviceModule.Id + "," + deviceModule.Datum_x + "," + deviceModule.Datum_y);
+                        if (imageDetail.PX > 0 || imageDetail.PY > 0)
+                        {
+                            Datum_x = imageDetail.PX;
+                            Datum_y = SpotPosition.Max_Height - imageDetail.PY;
+                        }
+                    }
+                    deviceModule.Datum_x = Datum_x;
+                    deviceModule.Datum_y = Datum_y;
+                    deviceModule.updateConfig();
+
+                    LogUtils.Log.Info(deviceModule.Id + "," + deviceModule.Datum_x + "," + deviceModule.Datum_y);
+
+                }
+                MessageBox.Show("重置成功");
+                LogUtils.Log.Info("重置基准点成功");
 
             }
-            MessageBox.Show("重置成功");
-            LogUtils.Log.Info("重置基准点成功");
+            else {
+                WaitingBox.Show(this, () =>
+                {
+                    System.Threading.Thread.Sleep(3000);
+                }, "正在玩命的加载，请稍后...");
+                
 
+            }
         }
 
         private void tb_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -404,7 +418,58 @@ namespace LightConductor.Pages
 
         }
 
-       
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            LogUtils.Log.Info("配置刷新.....");
+            CloseAllCameraAndTDC();
+
+            OpenAllCameraAndTDC();
+
+            //InitPoint();
+
+        }
+
+
+
+        private void CloseAllCameraAndTDC()
+        {
+            LogUtils.Log.Info("CloseAllCameraAndTDC");
+
+            for (int i = 0; i < CAMERA_PAIR_LIST.Count; i++)
+            {
+                CameraPair cameraPair = CAMERA_PAIR_LIST[i];
+                cameraPair.TopVideoHandle.Dispose();
+                cameraPair.MainVideoHandle.Dispose();
+                cameraPair.VerticalTDC.Dispose();
+                cameraPair.HorizontalTDC.Dispose();
+
+            }
+            cleanDetail();
+            CAMERA_PAIR_LIST = new List<CameraPair>();
+
+        }
+
+
+        public void cleanDetail()
+        {
+            label_v1.Text = "";
+            label_v2.Text = "";
+
+            SpotPosition_v1_s.A_x = 0;
+            SpotPosition_v1_s.A_y = 0;
+
+            SpotPosition_v1_n.A_x = 0;
+            SpotPosition_v1_n.A_y = 0;
+
+            SpotPosition_v2_s.A_x = 0;
+            SpotPosition_v2_s.A_y = 0;
+
+            SpotPosition_v2_n.A_x = 0;
+            SpotPosition_v2_n.A_y = 0;
+
+        }
+
+
     }
 
 

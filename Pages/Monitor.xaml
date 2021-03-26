@@ -7,12 +7,12 @@
       mc:Ignorable="d" 
       xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
       xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
-      xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
       d:DesignHeight="1000" d:DesignWidth="1920"
       Title="Monitor">
 
 
     <StackPanel >
+        
         <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
 
@@ -292,6 +292,8 @@
 
                     <Button Content="重置基准点" Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
+                    <Button Content="配置刷新" Grid.Row="0" Grid.Column="1"  Click="Reset_Click" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
                     <!--<CheckBox Name="Checker" Grid.Row="0" Grid.Column="1" Style="{DynamicResource SliderCheckBox}" Content="{Binding ElementName=Checker1,Path=IsChecked}" 
                                 HorizontalAlignment="Center" VerticalAlignment="Center" />-->
 
@@ -309,10 +311,10 @@
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="步长：" FontSize="20" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
                     <TextBox x:Name="velocity_tb" Grid.Row="0" Grid.Column="1" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" input:InputMethod.IsInputMethodEnabled="False" PreviewTextInput="tb_PreviewTextInput">
+                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput">
                         100
                     </TextBox>
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="mm" FontSize="20" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="mm" FontSize="15" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
 
 
                 </Grid>

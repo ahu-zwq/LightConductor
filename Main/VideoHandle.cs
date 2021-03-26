@@ -52,6 +52,8 @@ namespace LightConductor
 
         public static int MAX_LINK = 6;
 
+        private System.Windows.Forms.PictureBox pictureBox = null;
+
         private static Dictionary<String, List<VideoHandle>> HANDLE_DIC = new Dictionary<string, List<VideoHandle>>();
 
         private VideoHandle()
@@ -61,8 +63,8 @@ namespace LightConductor
 
         public static VideoHandle GetVideoHandle(string Ip)
         {
-            if (HANDLE_DIC.ContainsKey(Ip))
-            {
+            //if (HANDLE_DIC.ContainsKey(Ip))
+            //{
                 /*List<VideoHandle> ip_handles = HANDLE_DIC[Ip];
                 if (ip_handles != null && ip_handles.Count >= MAX_LINK)
                 {
@@ -70,12 +72,12 @@ namespace LightConductor
                     videoHandle.btn_Exit_Click();
                     ip_handles.RemoveAt(MAX_LINK - 1);
                 }*/
+            //    return new VideoHandle();
+            //}
+            //else
+            //{
                 return new VideoHandle();
-            }
-            else
-            {
-                return new VideoHandle();
-            }
+            //}
 
 
         }
@@ -227,8 +229,8 @@ namespace LightConductor
             {
                 CHCNetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new CHCNetSDK.NET_DVR_PREVIEWINFO();
 
-                var picbox = windowsFormsHost.Child as System.Windows.Forms.PictureBox;
-                lpPreviewInfo.hPlayWnd = picbox.Handle;//预览窗口
+                pictureBox = windowsFormsHost.Child as System.Windows.Forms.PictureBox;
+                lpPreviewInfo.hPlayWnd = pictureBox.Handle;//预览窗口
                 //lpPreviewInfo.lChannel = Int16.Parse(textBoxChannel.Text);//预te览的设备通道
                 lpPreviewInfo.lChannel = 1;
                 lpPreviewInfo.dwStreamType = 0;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
@@ -266,7 +268,7 @@ namespace LightConductor
                 else
                 {
                     //预览成功
-                    LogUtils.Log.Info("Stop Live View");
+                    LogUtils.Log.Info("Live View");
                 }
             }
             else
@@ -281,16 +283,19 @@ namespace LightConductor
         //停止预览 Stop live view 
         public void StopRealPlay()
         {
-            //停止预览 Stop live view 
-            if (!CHCNetSDK.NET_DVR_StopRealPlay(m_lRealHandle))
+            if (m_lRealHandle > -1) 
             {
-                iLastErr = CHCNetSDK.NET_DVR_GetLastError();
-                str = "NET_DVR_StopRealPlay failed, error code= " + iLastErr;
-                LogUtils.Log.Error(str);
-                return;
+                //停止预览 Stop live view 
+                if (!CHCNetSDK.NET_DVR_StopRealPlay(m_lRealHandle))
+                {
+                    iLastErr = CHCNetSDK.NET_DVR_GetLastError();
+                    str = "NET_DVR_StopRealPlay failed, error code= " + iLastErr;
+                    LogUtils.Log.Error(str);
+                    return;
+                }
+                m_lRealHandle = -1;
             }
-            m_lRealHandle = -1;
-            LogUtils.Log.Info("Live View");
+            LogUtils.Log.Info("Stop Live View");
         }
 
         public void RealDataCallBack(Int32 lRealHandle, UInt32 dwDataType, IntPtr pBuffer, UInt32 dwBufSize, IntPtr pUser)
@@ -419,7 +424,23 @@ namespace LightConductor
             {
                 CHCNetSDK.NET_DVR_Cleanup();
             }
+            if (pictureBox != null)
+            {
+                pictureBox.Refresh();
+            }
+            if (HANDLE_DIC.Count > 0)
+            { 
+                HANDLE_DIC = new Dictionary<string, List<VideoHandle>>();
+            }
 
+        }
+
+        public void RefreshPicture()
+        {
+            if (pictureBox != null)
+            { 
+                pictureBox.Refresh();
+            }
         }
 
 
