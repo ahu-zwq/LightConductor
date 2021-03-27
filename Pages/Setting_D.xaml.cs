@@ -28,6 +28,8 @@ namespace LightConductor.Pages
     public partial class Setting_D : Page
     {
 
+        public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static List<DeviceModule> DEVICE_LIST = new List<DeviceModule>();
         public readonly static string SettingPath = "D:\\LC\\settings_db.json";
         public readonly static int DeviceNum = 7;
@@ -50,7 +52,7 @@ namespace LightConductor.Pages
 
         private static List<DeviceModule> InitDevices()
         {
-            LogUtils.Log.Info("InitDevices");
+            Log.Info("InitDevices");
             List<DeviceModule> lists = JsonNewtonsoft.ReadingJson<DeviceModule>(SettingPath);
             int v = DeviceNum - lists.Count;
             if (v > 0)

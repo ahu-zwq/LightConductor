@@ -7,18 +7,17 @@
         mc:Ignorable="d"
         AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="Manual"
         ShowInTaskbar="False" Background="Transparent"
-        Title="WaitingBox" Height="110" Width="260">
+        Title="WaitingBox" Height="90" Width="150">
     
     <Grid>
-        <!--Background="{Binding Path=Background,ElementName=wb}"-->
-        <Border Background="Aqua"  Opacity="0.89" CornerRadius="1" ></Border>
+        <Border Background="#FF8DD28A"  Opacity="0.89" CornerRadius="1" ></Border>
         <StackPanel VerticalAlignment="Center"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
             <TextBlock Text="&#xe65f;" x:Name="FIcon" FontSize="50"  RenderTransformOrigin="0.5,0.5" Margin="3">
                 <TextBlock.RenderTransform>
                     <RotateTransform x:Name="TransFIcon" Angle="0"/>
                 </TextBlock.RenderTransform>
             </TextBlock>
-            <TextBlock x:Name="txtMessage" Margin="2,10,15,10" Width="160" VerticalAlignment="Center" TextWrapping="Wrap">Loading...</TextBlock>
+            <TextBlock x:Name="txtMessage" Margin="2,10,2,10" Width="60" VerticalAlignment="Center" TextWrapping="Wrap">Loading...</TextBlock>
         </StackPanel>
     </Grid>
     <Window.Triggers>

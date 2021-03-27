@@ -24,6 +24,7 @@ namespace LightConductor.Main
         private double p_width;
         private double p_height;
         private double l_thick;
+        
 
         static double P_Wight = 4.0;
         static double L_Wight = 1.0;
@@ -352,5 +353,6 @@ namespace LightConductor.Main
             }
         }
 
+        
     }
 }

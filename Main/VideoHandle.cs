@@ -34,6 +34,7 @@ namespace LightConductor
 {
     class VideoHandle : IDisposable
     {
+        public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private uint iLastErr = 0;
         private Int32 m_lUserID = -1;
@@ -56,6 +57,13 @@ namespace LightConductor
 
         private static Dictionary<String, List<VideoHandle>> HANDLE_DIC = new Dictionary<string, List<VideoHandle>>();
 
+        private string ip;
+
+        public VideoHandle(string ip)
+        {
+            this.ip = ip;
+        }
+
         private VideoHandle()
         {
 
@@ -65,18 +73,18 @@ namespace LightConductor
         {
             //if (HANDLE_DIC.ContainsKey(Ip))
             //{
-                /*List<VideoHandle> ip_handles = HANDLE_DIC[Ip];
-                if (ip_handles != null && ip_handles.Count >= MAX_LINK)
-                {
-                    VideoHandle videoHandle = ip_handles[MAX_LINK - 1];
-                    videoHandle.btn_Exit_Click();
-                    ip_handles.RemoveAt(MAX_LINK - 1);
-                }*/
+            /*List<VideoHandle> ip_handles = HANDLE_DIC[Ip];
+            if (ip_handles != null && ip_handles.Count >= MAX_LINK)
+            {
+                VideoHandle videoHandle = ip_handles[MAX_LINK - 1];
+                videoHandle.btn_Exit_Click();
+                ip_handles.RemoveAt(MAX_LINK - 1);
+            }*/
             //    return new VideoHandle();
             //}
             //else
             //{
-                return new VideoHandle();
+            return new VideoHandle(Ip);
             //}
 
 
@@ -84,11 +92,11 @@ namespace LightConductor
 
         public static void Init()
         {
-            LogUtils.Log.Info("video init");
+            Log.Info("*** VIDEO video init");
             m_bInitSDK = CHCNetSDK.NET_DVR_Init();
             if (m_bInitSDK == false)
             {
-                LogUtils.Log.Error("NET_DVR_Init error!");
+                Log.Error("NET_DVR_Init error!");
                 return;
             }
             else
@@ -105,7 +113,7 @@ namespace LightConductor
                 if (string.IsNullOrWhiteSpace(ip) || string.IsNullOrWhiteSpace(port)
                     || string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
                 {
-                    LogUtils.Log.Error("参数为空！Login Failed!");
+                    Log.Error("参数为空！Login Failed!");
                     return;
                 }
 
@@ -143,13 +151,13 @@ namespace LightConductor
                 {
                     iLastErr = CHCNetSDK.NET_DVR_GetLastError();
                     str = "NET_DVR_Login_V40 failed, error code= " + iLastErr; //登录失败，输出错误号
-                    LogUtils.Log.ErrorFormat(str + ", {0},{1},{2},{3}", ip, port, userName, password);
+                    Log.ErrorFormat(str + ", {0},{1},{2},{3}", ip, port, userName, password);
                     return;
                 }
                 else
                 {
                     //登录成功
-                    LogUtils.Log.InfoFormat("Login Success! {0},{1},{2},{3}", ip, port, userName, password);
+                    Log.InfoFormat("*** VIDEO Login Success! {0},{1},{2},{3}", ip, port, userName, password);
 
                     //addHandle(ip);
 
@@ -161,7 +169,7 @@ namespace LightConductor
                 //注销登录 Logout the device
                 if (m_lRealHandle >= 0)
                 {
-                    LogUtils.Log.Error("Please stop live view firstly");
+                    Log.Error("Please stop live view firstly");
                     return;
                 }
 
@@ -169,7 +177,7 @@ namespace LightConductor
                 {
                     iLastErr = CHCNetSDK.NET_DVR_GetLastError();
                     str = "NET_DVR_Logout failed, error code= " + iLastErr;
-                    LogUtils.Log.Error(str);
+                    Log.Error(str);
                     return;
                 }
                 m_lUserID = -1;
@@ -221,7 +229,7 @@ namespace LightConductor
         {
             if (m_lUserID < 0)
             {
-                LogUtils.Log.Error("Please login the device firstly");
+                Log.Error("Please login the device firstly");
                 return;
             }
 
@@ -262,13 +270,13 @@ namespace LightConductor
                 {
                     iLastErr = CHCNetSDK.NET_DVR_GetLastError();
                     str = "NET_DVR_RealPlay_V40 failed, error code= " + iLastErr; //预览失败，输出错误号
-                    LogUtils.Log.Error(str);
+                    Log.Error(str);
                     return;
                 }
                 else
                 {
                     //预览成功
-                    LogUtils.Log.Info("Live View");
+                    Log.InfoFormat("*** VIDEO Live View, {0}", ip);
                 }
             }
             else
@@ -283,19 +291,19 @@ namespace LightConductor
         //停止预览 Stop live view 
         public void StopRealPlay()
         {
-            if (m_lRealHandle > -1) 
+            if (m_lRealHandle > -1)
             {
                 //停止预览 Stop live view 
                 if (!CHCNetSDK.NET_DVR_StopRealPlay(m_lRealHandle))
                 {
                     iLastErr = CHCNetSDK.NET_DVR_GetLastError();
                     str = "NET_DVR_StopRealPlay failed, error code= " + iLastErr;
-                    LogUtils.Log.Error(str);
+                    Log.Error(str);
                     return;
                 }
                 m_lRealHandle = -1;
             }
-            LogUtils.Log.Info("Stop Live View");
+            Log.InfoFormat("*** VIDEO Stop Live View, {0}", ip);
         }
 
         public void RealDataCallBack(Int32 lRealHandle, UInt32 dwDataType, IntPtr pBuffer, UInt32 dwBufSize, IntPtr pUser)
@@ -337,13 +345,13 @@ namespace LightConductor
             {
                 iLastErr = CHCNetSDK.NET_DVR_GetLastError();
                 str = "NET_DVR_CapturePicture failed, error code= " + iLastErr;
-                LogUtils.Log.Error(str);
+                Log.Error(str);
                 return;
             }
             else
             {
                 str = "Successful to capture the BMP file and the saved file is " + sBmpPicFileName;
-                LogUtils.Log.Info(str);
+                Log.Info(str);
             }
             return;
         }
@@ -365,12 +373,12 @@ namespace LightConductor
             {
                 iLastErr = CHCNetSDK.NET_DVR_GetLastError();
                 str = "NET_DVR_CaptureJPEGPicture failed, error code= " + iLastErr;
-                LogUtils.Log.Error(str);
+                Log.Error(str);
             }
             else
             {
                 str = "Successful to capture the JPEG file and the saved file is " + sJpegPicFileName;
-                LogUtils.Log.Info(str);
+                Log.Info(str);
                 flag = true;
             }
             return flag;
@@ -378,7 +386,7 @@ namespace LightConductor
 
         public byte[] btnJPEG_Byte()
         {
-            byte[] bytes = new byte[0];
+            //byte[] bytes = new byte[0];
             if (m_lUserID > -1)
             {
                 CHCNetSDK.NET_DVR_JPEGPARA lpJpegPara = new CHCNetSDK.NET_DVR_JPEGPARA();
@@ -389,23 +397,51 @@ namespace LightConductor
                 int lChannel = 1;
                 byte[] p = new byte[1 * 1024 * 1024];
 
+
                 if (!CHCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(m_lUserID, lChannel, ref lpJpegPara, p, dwPicSize, ref lpSizeReturned))
                 {
                     iLastErr = CHCNetSDK.NET_DVR_GetLastError();
                     str = "NET_DVR_CaptureJPEGPicture_NEW failed, error code= " + iLastErr;
-                    LogUtils.Log.Error(str);
+                    Log.Error(str);
                 }
                 else
                 {
                     str = "Successful to capture the JPEG to Memory";
-                    LogUtils.Log.Info(str);
+                    Log.Info(str);
                 }
-                bytes = p;
+
+                if (lpSizeReturned > 0)
+                {
+                    byte[] bytes = new byte[lpSizeReturned];
+                    Array.Copy(p, bytes, lpSizeReturned);
+                    return bytes;
+                }
+                //bytes = p;
             }
-            return bytes;
+            return new byte[0];
         }
 
+        public void Stop()
+        {
+            if (m_lRealHandle >= 0)
+            {
+                CHCNetSDK.NET_DVR_StopRealPlay(m_lRealHandle);
+            }
+            if (m_lUserID >= 0)
+            {
+                CHCNetSDK.NET_DVR_Logout(m_lUserID);
+            }
+           
+            if (pictureBox != null)
+            {
+                pictureBox.Refresh();
+            }
+            if (HANDLE_DIC.Count > 0)
+            {
+                HANDLE_DIC = new Dictionary<string, List<VideoHandle>>();
+            }
 
+        }
 
         /// <summary>
 		/// 清理所有正在使用的资源。
@@ -423,22 +459,16 @@ namespace LightConductor
             if (m_bInitSDK == true)
             {
                 CHCNetSDK.NET_DVR_Cleanup();
+                m_bInitSDK = false;
             }
-            if (pictureBox != null)
-            {
-                pictureBox.Refresh();
-            }
-            if (HANDLE_DIC.Count > 0)
-            { 
-                HANDLE_DIC = new Dictionary<string, List<VideoHandle>>();
-            }
+            
 
         }
 
         public void RefreshPicture()
         {
             if (pictureBox != null)
-            { 
+            {
                 pictureBox.Refresh();
             }
         }

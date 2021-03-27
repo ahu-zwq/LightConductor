@@ -11,6 +11,7 @@ namespace LightConductor.Main
 {
     class OpenCVUtils
     {
+        public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public static Mat bytesToMat(byte[] bytes)
         {
@@ -30,7 +31,7 @@ namespace LightConductor.Main
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Log.Error(e.StackTrace);
                 return detail;
             }
         }
@@ -44,7 +45,7 @@ namespace LightConductor.Main
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Log.Error(e.StackTrace);
                 return detail;
             }
         }
@@ -55,7 +56,6 @@ namespace LightConductor.Main
             ImageDetail detail = new ImageDetail();
             try
             {
-                LogUtils.Log.Info("getHighPoint, image size:" + srcImg.Size());
                 Mat dstImg = srcImg.Clone();
                 Mat tempImg = srcImg.Clone();
                 Cv2.CvtColor(tempImg, tempImg, ColorConversionCodes.BGR2GRAY);//色域转换
@@ -92,8 +92,8 @@ namespace LightConductor.Main
                 {
                     Point2f center = box[max_index].Center;
 
-                    detail.PX = Convert.ToInt16(center.X);
-                    detail.PY = Convert.ToInt16(center.Y);
+                    detail.PX = Convert.ToDouble(center.X.ToString("0.00"));
+                    detail.PY = Convert.ToDouble(center.Y.ToString("0.00"));
                     //Cv2.Line(dstImg, new Point(center.X, center.Y - 6), new Point(center.X, center.Y + 6), new Scalar(0, 0, 255), 2);
                     //Cv2.Line(dstImg, new Point(center.X - 6, center.Y), new Point(center.X + 6, center.Y), new Scalar(0, 0, 255), 2);
                     //Cv2.Ellipse(dstImg, box[max_index], new Scalar(0, 255, 0), 1);
@@ -102,12 +102,12 @@ namespace LightConductor.Main
                     //Console.WriteLine("图片大小\t" + dstImg.Rows + "\t" + dstImg.Cols);
 
                 }
-                LogUtils.Log.InfoFormat("getHighPoint, height:{0},weight:{1}, result:{2},{3}", dstImg.Cols, dstImg.Rows, detail.PX, detail.PY);
+                Log.InfoFormat("*** OPENCV getHighPoint, height:{0}, weight:{1}, result: x-{2}, y-{3}", dstImg.Cols, dstImg.Rows, detail.PX, detail.PY);
                 return detail;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Log.Error(e.StackTrace);
                 return detail;
             }
         }

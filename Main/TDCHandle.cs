@@ -17,6 +17,8 @@ namespace LightConductor.Main
     class TDCHandle : IDisposable
     {
 
+        public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private string serialNo;
         private TCubeDCServo device;
         private MotorConfiguration motorSettings;
@@ -26,7 +28,7 @@ namespace LightConductor.Main
         {
             try
             {
-                LogUtils.Log.Info("start tdc," + serialNo);
+                Log.Info("*** TDC start tdc," + serialNo);
                 this.serialNo = serialNo;
                 DeviceManagerCLI.BuildDeviceList();
                 device = TCubeDCServo.CreateTCubeDCServo(serialNo);
@@ -37,10 +39,10 @@ namespace LightConductor.Main
                 device.EnableDevice();
                 Thread.Sleep(500);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // Connection failed
-                LogUtils.Log.ErrorFormat("Failed to open device {0}", serialNo);
+                Log.ErrorFormat("{0}, {1}", serialNo, e.StackTrace);
             }
 
 
@@ -79,19 +81,18 @@ namespace LightConductor.Main
                     }
                     Decimal nowPos = device.Position;
                     Decimal toPos = nowPos + distance;
-                    LogUtils.Log.InfoFormat("Moving Device to {0}", toPos);
+                    Log.InfoFormat("*** TDC >>>>>>>> {0} start move, from:{1}, distance:{2}, to:{3}", serialNo, nowPos, distance, toPos);
                     device.MoveTo(toPos, 60000);
                 }
                 catch (Exception e)
                 {
-                    LogUtils.Log.ErrorFormat("Failed to move to position, {0}", e.Message);
+                    Log.ErrorFormat("Failed to move to position, {0}", e.StackTrace);
                     MessageBox.Show("无法继续移动");
                     return;
                 }
-                LogUtils.Log.Info("Device Moved");
 
                 Decimal newPos = device.Position;
-                LogUtils.Log.InfoFormat("Device Moved to {0}", newPos);
+                Log.InfoFormat("*** TDC <<<<<<<<< {0} move success, now:{1}", serialNo, newPos);
             }
 
         }

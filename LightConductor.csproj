@@ -167,6 +167,7 @@
     <Compile Include="Pages\WaitingBox.xaml.cs">
       <DependentUpon>WaitingBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Main\PicLabel.cs" />
     <Compile Include="SDK\CHCNetSDK.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

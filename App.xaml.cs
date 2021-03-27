@@ -16,14 +16,16 @@ namespace LightConductor
     public partial class App : Application
     {
 
+        public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            LogUtils.Log.Info("==Startup=====================>>>");
+            Log.Info("==Startup=====================>>>");
         }
         protected override void OnExit(ExitEventArgs e)
         {
-            LogUtils.Log.Info("<<<========================End==");
+            Log.Info("<<<========================End==");
             base.OnExit(e);
         }
 

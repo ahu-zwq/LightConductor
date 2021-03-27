@@ -13,7 +13,7 @@ namespace LightConductor
 {
     public class DeviceModule : INotifyPropertyChanged, IEditableObject
     {
-
+        public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private string id;
         private string name;
         private string verticalMotorSerialNo;
@@ -135,7 +135,7 @@ namespace LightConductor
 
                     JsonNewtonsoft.WritingJson(Setting_D.SettingPath, lists);
 
-                    LogUtils.Log.Info("更新配置");
+                    Log.Info("更新配置 > " + Setting_D.SettingPath);
                     break;
                 }
             }

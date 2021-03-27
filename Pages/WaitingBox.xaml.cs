@@ -28,6 +28,8 @@ namespace LightConductor.Pages
             InitializeComponent();
             this._Callback = callback;
             this.Loaded += WaitingBox_Loaded;
+
+            System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
         }
 
         void WaitingBox_Loaded(object sender, RoutedEventArgs e)
@@ -46,7 +48,7 @@ namespace LightConductor.Pages
         /// 显示等待框，owner指定宿主视图元素，callback为需要执行的方法体（需要自己做异常处理）。
         /// 目前等等框为模式窗体
         /// </summary>
-        public static void Show(FrameworkElement owner, Action callback, string mes = "有一种幸福，叫做等待...")
+        public static void Show(FrameworkElement owner, Action callback, string mes)
         {
             WaitingBox win = new WaitingBox(callback);
             Window pwin = Window.GetWindow(owner);
@@ -57,5 +59,18 @@ namespace LightConductor.Pages
             win.Top = loc.Y + (owner.ActualHeight - win.Height) / 2;
             win.ShowDialog();
         }
+
+        public static void Show(FrameworkElement owner, Action callback)
+        {
+            WaitingBox win = new WaitingBox(callback);
+            Window pwin = Window.GetWindow(owner);
+            win.Owner = pwin;
+            var loc = owner.PointToScreen(new Point());
+            win.Left = loc.X + (owner.ActualWidth - win.Width) / 2;
+            win.Top = loc.Y + (owner.ActualHeight - win.Height) / 2;
+            win.ShowDialog();
+        }
+
+
     }
 }

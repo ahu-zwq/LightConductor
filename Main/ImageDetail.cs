@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,5 +30,7 @@ namespace LightConductor.Main
         public int Width { get => width; set => width = value; }
         public double PX { get => pX; set => pX = value; }
         public double PY { get => pY; set => pY = value; }
+
+        
     }
 }
