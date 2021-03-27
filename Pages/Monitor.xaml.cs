@@ -55,6 +55,14 @@ namespace LightConductor.Pages
         private PicLabel picLabel_v1;
         private PicLabel picLabel_v2;
 
+        private PicLabel picLabel_t1;
+        private PicLabel picLabel_t2;
+        private PicLabel picLabel_t3;
+        private PicLabel picLabel_t4;
+        private PicLabel picLabel_t5;
+        private PicLabel picLabel_t6;
+        private PicLabel picLabel_t7;
+
 
         public Monitor()
         {
@@ -87,6 +95,44 @@ namespace LightConductor.Pages
             picLabel_v2 = new PicLabel("");
             labelBinding(picLabel_v1, label_v1);
             labelBinding(picLabel_v2, label_v2);
+
+
+            picLabel_t1 = new PicLabel("");
+            picLabel_t2 = new PicLabel("");
+            picLabel_t3 = new PicLabel("");
+            picLabel_t4 = new PicLabel("");
+            picLabel_t5 = new PicLabel("");
+            picLabel_t6 = new PicLabel("");
+            picLabel_t7 = new PicLabel("");
+            labelBinding(picLabel_t1, top_label_1);
+            labelBinding(picLabel_t2, top_label_2);
+            labelBinding(picLabel_t3, top_label_3);
+            labelBinding(picLabel_t4, top_label_4);
+            labelBinding(picLabel_t5, top_label_5);
+            labelBinding(picLabel_t6, top_label_6);
+            labelBinding(picLabel_t7, top_label_7);
+
+
+            //UIElementCollection children = top_devices.Children;
+            //int tb = 0;
+            //int wf = 0;
+            //for (int i = 0; i < children.Count; i++)
+            //{
+            //    UIElement uIElement = children[i];
+            //    if (uIElement is TextBlock)
+            //    {
+            //        TextBlock block = uIElement as TextBlock;
+            //        block.Text = CAMERA_PAIR_LIST[tb].DeviceModule.Name;
+            //        tb++;
+            //    }
+            //    if (uIElement is WindowsFormsHost)
+            //    {
+            //        WindowsFormsHost host = uIElement as WindowsFormsHost;
+            //        CAMERA_PAIR_LIST[wf].TopVideoHandle.btnPreview_Click(host);
+            //        wf++;
+            //    }
+
+            //}
         }
 
         private void labelBinding(PicLabel label, TextBlock text)
@@ -260,6 +306,15 @@ namespace LightConductor.Pages
             CAMERA_PAIR_LIST[4].TopVideoHandle.btnPreview_Click(pictureBoxHost5);
             CAMERA_PAIR_LIST[5].TopVideoHandle.btnPreview_Click(pictureBoxHost6);
             CAMERA_PAIR_LIST[6].TopVideoHandle.btnPreview_Click(pictureBoxHost7);
+
+            picLabel_t1.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Name;
+            picLabel_t2.Pic_label = CAMERA_PAIR_LIST[1].DeviceModule.Name;
+            picLabel_t3.Pic_label = CAMERA_PAIR_LIST[2].DeviceModule.Name;
+            picLabel_t4.Pic_label = CAMERA_PAIR_LIST[3].DeviceModule.Name;
+            picLabel_t5.Pic_label = CAMERA_PAIR_LIST[4].DeviceModule.Name;
+            picLabel_t6.Pic_label = CAMERA_PAIR_LIST[5].DeviceModule.Name;
+            picLabel_t7.Pic_label = CAMERA_PAIR_LIST[6].DeviceModule.Name;
+
 
             startNumPictureBox(1);
 
@@ -486,7 +541,7 @@ namespace LightConductor.Pages
                 deviceModule.Datum_y = Datum_y;
                 deviceModule.updateConfig();
 
-                Log.InfoFormat("datum id:{0}, x-{1}, y-{2}", deviceModule.Id, deviceModule.Datum_x, deviceModule.Datum_y);
+                Log.InfoFormat("datum id:{0}, x:{1}, y:{2}", deviceModule.Id, deviceModule.Datum_x, deviceModule.Datum_y);
 
             }
         }

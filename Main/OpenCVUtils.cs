@@ -88,12 +88,19 @@ namespace LightConductor.Main
 
                 detail.Width = dstImg.Cols;
                 detail.Height = dstImg.Rows;
+                float x = -1;
+                float y = -1;
                 if (max_area != 0)//绘制中心十字
                 {
                     Point2f center = box[max_index].Center;
 
-                    detail.PX = Convert.ToDouble(center.X.ToString("0.00"));
-                    detail.PY = Convert.ToDouble(center.Y.ToString("0.00"));
+                    x = center.X;
+                    y = center.Y;
+                    if (x >= 0 && y >= 0 && x <= dstImg.Cols && y <= dstImg.Rows)
+                    { 
+                        detail.PX = Convert.ToDouble(x.ToString("0.00"));
+                        detail.PY = Convert.ToDouble(y.ToString("0.00"));
+                    }
                     //Cv2.Line(dstImg, new Point(center.X, center.Y - 6), new Point(center.X, center.Y + 6), new Scalar(0, 0, 255), 2);
                     //Cv2.Line(dstImg, new Point(center.X - 6, center.Y), new Point(center.X + 6, center.Y), new Scalar(0, 0, 255), 2);
                     //Cv2.Ellipse(dstImg, box[max_index], new Scalar(0, 255, 0), 1);
@@ -102,7 +109,7 @@ namespace LightConductor.Main
                     //Console.WriteLine("图片大小\t" + dstImg.Rows + "\t" + dstImg.Cols);
 
                 }
-                Log.InfoFormat("*** OPENCV getHighPoint, height:{0}, weight:{1}, result: x-{2}, y-{3}", dstImg.Cols, dstImg.Rows, detail.PX, detail.PY);
+                Log.InfoFormat("*** OPENCV getHighPoint, height:{0}, weight:{1}, PX:{2}, PY:{3}, cv result: x={4}, y={5}", dstImg.Cols, dstImg.Rows, detail.PX, detail.PY, x, y);
                 return detail;
             }
             catch (Exception e)
