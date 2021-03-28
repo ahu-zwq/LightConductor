@@ -91,7 +91,7 @@ namespace LightConductor
             else
             {
                 //保存SDK日志 To save the SDK log
-                CHCNetSDK.NET_DVR_SetLogToFile(3, "D:\\LC\\SdkLog\\", true);
+                CHCNetSDK.NET_DVR_SetLogToFile(3, "C:\\LC\\HK-SdkLog\\", true);
             }
         }
 
