@@ -7,10 +7,9 @@
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="pack://application:,,,/Panuon.UI.Silver;component/Control.xaml" />-->
-
                 <ResourceDictionary Source="Pages/CommonDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         </ResourceDictionary>
 
 

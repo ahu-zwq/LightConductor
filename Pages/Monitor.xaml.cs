@@ -606,6 +606,15 @@ namespace LightConductor.Pages
         }
 
 
+        private void Open_Auto(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void Close_Auto(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
 

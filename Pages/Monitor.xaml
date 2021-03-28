@@ -12,7 +12,7 @@
 
 
     <StackPanel >
-        
+
         <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
 
@@ -71,7 +71,7 @@
         </Grid>
 
         <Border Height="3" BorderBrush="LightGray" BorderThickness="0,0,0,2" Margin="0,0,0,5" />
-        
+
         <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="7*" />
@@ -268,94 +268,111 @@
 
             </Grid>
 
-            <Border Grid.Row="0" Grid.Column="1" Background="#FF2C2C2C" BorderBrush="#FF333337" BorderThickness="5,5,5,5">
-            <Grid >
-                
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5*"/>
-                </Grid.RowDefinitions>
+            <Border Grid.Row="0" Grid.Column="1" Background="#FF2C2C2C" BorderBrush="LightGray" BorderThickness="5,5,5,5">
+                <Grid >
 
-                <Grid Grid.Row="0" Grid.Column="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
 
-                    <Button Content="重置基准点" Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <Button Content="配置刷新" Grid.Row="0" Grid.Column="1"  Click="Reset_Click" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Grid Grid.Row="0" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                    <!--<CheckBox Name="Checker" Grid.Row="0" Grid.Column="1" Style="{DynamicResource SliderCheckBox}" Content="{Binding ElementName=Checker1,Path=IsChecked}" 
-                                HorizontalAlignment="Center" VerticalAlignment="Center" />-->
+                        </Grid>
 
-                </Grid>
+                        <!--<TextBlock Grid.Row="0" Grid.Column="0" Text="自动模式：" FontSize="18" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
+                        --><!--<CheckBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" x:Name="auto_control" Checked="Open_Auto" Unchecked="Close_Auto" VerticalAlignment="Center" Content="OFF" Tag="NO" BorderThickness="1,1,0,1" Style="{DynamicResource CheckBoxSwitchStyle}" />--><!--
 
-                <Grid Grid.Row="2" Grid.Column="0" Height="60" VerticalAlignment="Top" HorizontalAlignment="Center" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                        <Button Content="&#xe60f;" FontFamily="/LightConductor;component/Resources/#iconfont" Foreground="#FF707070"  FontSize="50" Grid.Row="0" Grid.Column="1" Height="30" Width="60" Style="{StaticResource CheckAutoBtnStyle}" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="步长：" FontSize="20" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
-                    <TextBox x:Name="velocity_tb" Grid.Row="0" Grid.Column="1" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        <Button Content="&#xe60e;" FontFamily="/LightConductor;component/Resources/#iconfont" Foreground="Green"  FontSize="50" Grid.Row="0" Grid.Column="1" Height="30" Width="60" Style="{StaticResource CheckAutoBtnStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" />-->
+
+                        <Button Content="重置基准点" Grid.Row="1" Grid.Column="0"  Click="Save_Datum_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                        <Button Content="配置刷新" Grid.Row="1" Grid.Column="1"  Click="Reset_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                    </Grid>
+
+                    <Border Height="3" Grid.Row="1" Grid.Column="0" BorderBrush="LightGray" BorderThickness="0,0,0,2" VerticalAlignment="Bottom" />
+
+                    <Grid Grid.Row="2" Grid.Column="0" Height="60" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="步长：" FontSize="20" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
+                        <TextBox x:Name="velocity_tb" Grid.Row="0" Grid.Column="1" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" 
                              FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput">
-                        100
-                    </TextBox>
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="mm" FontSize="15" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
+                            100
+                        </TextBox>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="mm" FontSize="15" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
 
 
-                </Grid>
+                    </Grid>
 
 
 
 
 
-                <Grid Grid.Row="2" Grid.Column="0" Height="200" Width="200" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="2" Grid.Column="0" Height="200" Width="200" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <!--<TextBlock x:Name="Up" MouseLeftButtonDown="Up_click" Grid.Row="0" Grid.Column="1" Text="&#xf0d8;" Style="{StaticResource FIcon}" ></TextBlock>
+                        <!--<TextBlock x:Name="Up" MouseLeftButtonDown="Up_click" Grid.Row="0" Grid.Column="1" Text="&#xf0d8;" Style="{StaticResource FIcon}" ></TextBlock>
                     <TextBlock x:Name="Down" MouseLeftButtonDown="Down_click" Grid.Row="2" Grid.Column="1" Text="&#xf0d7;" Style="{StaticResource FIcon}"></TextBlock>
                     <TextBlock x:Name="Left" MouseLeftButtonDown="Left_click" Grid.Row="1" Grid.Column="0" Text="&#xf0d9;" Style="{StaticResource FIcon}" ></TextBlock>
                     <TextBlock x:Name="Right" MouseLeftButtonDown="Right_click" Grid.Row="1" Grid.Column="2" Text="&#xf0da;" Style="{StaticResource FIcon}" ></TextBlock>-->
 
 
-                    <Button x:Name="Up" Click="Up_click" Grid.Row="0" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEDDB;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
-                    </Button>
-                    <Button x:Name="Down" Click="Down_click" Grid.Row="2" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEDDC;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
-                    </Button>
-                    <Button x:Name="Left" Click="Left_click" Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
-                    </Button>
-                    <Button x:Name="Right" Click="Right_click" Grid.Row="1" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
-                    </Button>
+                        <Button x:Name="Up" Click="Up_click" Grid.Row="0" Grid.Column="1" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe MDL2 Assets" Content="&#xEDDB;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
+                        </Button>
+                        <Button x:Name="Down" Click="Down_click" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe MDL2 Assets" Content="&#xEDDC;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
+                        </Button>
+                        <Button x:Name="Left" Click="Left_click" Grid.Row="1" Grid.Column="0" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
+                        </Button>
+                        <Button x:Name="Right" Click="Right_click" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
+                        </Button>
 
+
+
+                    </Grid>
 
 
                 </Grid>
-
-
-            </Grid>
 
             </Border>
         </Grid>
