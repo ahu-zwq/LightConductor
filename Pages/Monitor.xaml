@@ -357,14 +357,14 @@
                     <TextBlock x:Name="Left" MouseLeftButtonDown="Left_click" Grid.Row="1" Grid.Column="0" Text="&#xf0d9;" Style="{StaticResource FIcon}" ></TextBlock>
                     <TextBlock x:Name="Right" MouseLeftButtonDown="Right_click" Grid.Row="1" Grid.Column="2" Text="&#xf0da;" Style="{StaticResource FIcon}" ></TextBlock>-->
 
-
-                        <Button x:Name="Up" Click="Up_click" Grid.Row="0" Grid.Column="1" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe MDL2 Assets" Content="&#xEDDB;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
+                        <!--IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}"-->
+                        <Button x:Name="Up" Click="Up_click" Grid.Row="0" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEDDB;" FontSize="70" Style="{StaticResource ControlBtnStyle}">
                         </Button>
-                        <Button x:Name="Down" Click="Down_click" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe MDL2 Assets" Content="&#xEDDC;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
+                        <Button x:Name="Down" Click="Down_click" Grid.Row="2" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEDDC;" FontSize="70" Style="{StaticResource ControlBtnStyle}">
                         </Button>
-                        <Button x:Name="Left" Click="Left_click" Grid.Row="1" Grid.Column="0" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
+                        <Button x:Name="Left" Click="Left_click" Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" FontSize="70" Style="{StaticResource ControlBtnStyle}">
                         </Button>
-                        <Button x:Name="Right" Click="Right_click" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" FontSize="90" Style="{StaticResource ControlBtnStyle}">
+                        <Button x:Name="Right" Click="Right_click" Grid.Row="1" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" FontSize="70" Style="{StaticResource ControlBtnStyle}">
                         </Button>
 
 

@@ -13,11 +13,11 @@
 
     <TabControl HorizontalContentAlignment="Stretch" SelectionChanged="TabControl_SelectionChanged" Background="#FF323232">
 
-        <TabItem Header="监控" FontSize="15" >
+        <TabItem Header="   监控   " FontSize="15" >
             <Frame Source="/LightConductor;component/Pages/Monitor.xaml"/>
         </TabItem>
 
-        <TabItem Header="设置" FontSize="15" >
+        <TabItem Header="   设置   " FontSize="15" >
             <Frame Source="/LightConductor;component/Pages/Setting_D.xaml"/>
         </TabItem>
     </TabControl>

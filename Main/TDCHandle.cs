@@ -44,15 +44,17 @@ namespace LightConductor.Main
                 // Connection failed
                 Log.ErrorFormat("{0}, {1}", serialNo, e.StackTrace);
             }
+        }
 
-
+        public TDCHandle()
+        {
         }
 
         public static TDCHandle getTDCHandle(string serialNo)
         {
             if (string.IsNullOrWhiteSpace(serialNo))
             {
-                return null;
+                return new TDCHandle();
             }
             if (HANDLE_DIC.ContainsKey(serialNo))
             {
@@ -103,8 +105,11 @@ namespace LightConductor.Main
 		/// </summary>
 		public void Dispose()
         {
-            device.StopPolling();
-            device.Disconnect(true);
+            if (device != null)
+            {
+                device.StopPolling();
+                device.Disconnect(true);
+            }
         }
 
 

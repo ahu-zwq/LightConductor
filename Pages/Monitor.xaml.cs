@@ -21,6 +21,7 @@ using System.Windows.Threading;
 using System.Text.RegularExpressions;
 using log4net;
 using System.Reflection;
+using System.Configuration;
 
 namespace LightConductor.Pages
 {
@@ -44,7 +45,8 @@ namespace LightConductor.Pages
         public static string IMAGE_V1_PATH = "D:\\LC\\image_v1.jpg";
         public static string IMAGE_V2_PATH = "D:\\LC\\image_v2.jpg";
         public static string IMAGE_TEMP_PATH = "D:\\LC\\image_v2.jpg";
-        public static int TIME_MILLISECONDS = 1000;
+        public static int TIME_MILLISECONDS = Convert.ToInt32(ConfigurationManager.AppSettings["catch_position_interval"]);
+        public static int TDC_MAX_VELOCITY = Convert.ToInt32(ConfigurationManager.AppSettings["tdc_max_velocity"]);
 
         //光斑中心坐标
         private SpotPosition SpotPosition_v1_mark;
@@ -361,7 +363,7 @@ namespace LightConductor.Pages
 
         private void startNumPictureBox(int PictureBoxNum)
         {
-            if (!picLabel_v1.Pic_label.Equals(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name))
+            if (!picLabel_v1.Pic_label.Equals(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name) || string.IsNullOrWhiteSpace(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name))
             {
 
                 cleanPictureBox(cameraPair_v1, pictureBoxHost_v1);
@@ -468,7 +470,7 @@ namespace LightConductor.Pages
                 {
                     v = -v;
                 }
-                tDCHandle.Move(v, 1000);
+                tDCHandle.Move(v, TDC_MAX_VELOCITY);
             }
             catch (Exception e)
             {
@@ -573,12 +575,18 @@ namespace LightConductor.Pages
 
             for (int i = 0; i < CAMERA_PAIR_LIST.Count; i++)
             {
-                CameraPair cameraPair = CAMERA_PAIR_LIST[i];
-                cameraPair.TopVideoHandle.Stop();
-                cameraPair.MainVideoHandle.Stop();
-                cameraPair.VerticalTDC.Dispose();
-                cameraPair.HorizontalTDC.Dispose();
-
+                try 
+                {
+                    CameraPair cameraPair = CAMERA_PAIR_LIST[i];
+                    cameraPair.TopVideoHandle.Stop();
+                    cameraPair.MainVideoHandle.Stop();
+                    cameraPair.VerticalTDC.Dispose();
+                    cameraPair.HorizontalTDC.Dispose();
+                } 
+                catch (Exception e)
+                {
+                    Log.Error(e);
+                }
             }
             cleanDetail();
             CAMERA_PAIR_LIST = new List<CameraPair>();
@@ -608,7 +616,7 @@ namespace LightConductor.Pages
 
         private void Open_Auto(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void Close_Auto(object sender, RoutedEventArgs e)

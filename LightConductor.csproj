@@ -147,6 +147,7 @@
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\VideoHandle.cs" />
+    <Compile Include="Settings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -259,6 +260,9 @@
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="Resources\main.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\desktop.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

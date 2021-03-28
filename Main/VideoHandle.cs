@@ -71,22 +71,11 @@ namespace LightConductor
 
         public static VideoHandle GetVideoHandle(string Ip)
         {
-            //if (HANDLE_DIC.ContainsKey(Ip))
-            //{
-            /*List<VideoHandle> ip_handles = HANDLE_DIC[Ip];
-            if (ip_handles != null && ip_handles.Count >= MAX_LINK)
+            if (string.IsNullOrWhiteSpace(Ip))
             {
-                VideoHandle videoHandle = ip_handles[MAX_LINK - 1];
-                videoHandle.btn_Exit_Click();
-                ip_handles.RemoveAt(MAX_LINK - 1);
-            }*/
-            //    return new VideoHandle();
-            //}
-            //else
-            //{
+                return new VideoHandle();
+            }
             return new VideoHandle(Ip);
-            //}
-
 
         }
 

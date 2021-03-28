@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -31,7 +32,7 @@ namespace LightConductor.Pages
         public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static List<DeviceModule> DEVICE_LIST = new List<DeviceModule>();
-        public readonly static string SettingPath = "D:\\LC\\settings_db.json";
+        public readonly static string SettingPath = ConfigurationManager.AppSettings["setting_db_path"];
         public readonly static int DeviceNum = 7;
 
         public Setting_D()
