@@ -24,6 +24,8 @@ namespace LightConductor.Main
         private MotorConfiguration motorSettings;
         private static Dictionary<String, TDCHandle> HANDLE_DIC = new Dictionary<string, TDCHandle>();
 
+        public string SerialNo { get => serialNo; set => serialNo = value; }
+
         private TDCHandle(string serialNo)
         {
             try
@@ -88,7 +90,7 @@ namespace LightConductor.Main
                 }
                 catch (Exception e)
                 {
-                    Log.ErrorFormat("Failed to move to position, {0}", e.StackTrace);
+                    Log.ErrorFormat("Failed to move to position, {0}", e.Message);
                     MessageBox.Show("无法继续移动");
                     return;
                 }
@@ -97,6 +99,19 @@ namespace LightConductor.Main
                 Log.InfoFormat("*** TDC <<<<<<<<< {0} move success, now:{1}", serialNo, newPos);
             }
 
+        }
+
+        public Decimal getPosition()
+        {
+            try
+            {
+                return device.Position;
+            }
+            catch (Exception e)
+            {
+                Log.ErrorFormat("Failed getPosition, {0}", e.Message);
+            }
+            return -100000;
         }
 
 

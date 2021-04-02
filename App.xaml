@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="Pages/CommonDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <local:IsShowConverter x:Key="IsShowConverter"/>
         </ResourceDictionary>
 
 

@@ -38,14 +38,13 @@
                 <RowDefinition Height="190"/>
             </Grid.RowDefinitions>
 
-
-            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="top_label_1" Text="镜子1" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="top_label_2" Text="镜子2" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
-            <TextBlock Grid.Row="0" Grid.Column="2" x:Name="top_label_3" Text="镜子3" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
-            <TextBlock Grid.Row="0" Grid.Column="3" x:Name="top_label_4" Text="镜子4" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
-            <TextBlock Grid.Row="0" Grid.Column="4" x:Name="top_label_5" Text="镜子5" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
-            <TextBlock Grid.Row="0" Grid.Column="5" x:Name="top_label_6" Text="镜子6" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
-            <TextBlock Grid.Row="0" Grid.Column="6" x:Name="top_label_7" Text="镜子7" Margin="5,0,5,0" Background="#FF2D2D30" Foreground="White"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="top_label_1" FontSize="14" Text="镜子1" Margin="5,0,5,0" Foreground="White" Background="#FF2D2D30" />
+            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="top_label_2" FontSize="14" Text="镜子2" Margin="5,0,5,0" Foreground="White" Background="#FF2D2D30" />
+            <TextBlock Grid.Row="0" Grid.Column="2" x:Name="top_label_3" FontSize="14" Text="镜子3" Margin="5,0,5,0" Foreground="White" Background="#FF2D2D30" />
+            <TextBlock Grid.Row="0" Grid.Column="3" x:Name="top_label_4" FontSize="14" Text="镜子4" Margin="5,0,5,0" Foreground="White" Background="#FF2D2D30" />
+            <TextBlock Grid.Row="0" Grid.Column="4" x:Name="top_label_5" FontSize="14" Text="镜子5" Margin="5,0,5,0" Foreground="White" Background="#FF2D2D30" />
+            <TextBlock Grid.Row="0" Grid.Column="5" x:Name="top_label_6" FontSize="14" Text="镜子6" Margin="5,0,5,0" Foreground="White" Background="#FF2D2D30" />
+            <TextBlock Grid.Row="0" Grid.Column="6" x:Name="top_label_7" FontSize="14" Text="镜子7" Margin="5,0,5,0" Foreground="White" Background="#FF2D2D30" />
 
             <WindowsFormsHost Grid.Row="1" Grid.Column="0"  Name="pictureBoxHost1" Margin="5,1,5,5" >
                 <wf:PictureBox Click="PictureBox_Click" Name="PictureBox_1" BorderStyle="FixedSingle" BackColor="#FF595959"/>
@@ -328,8 +327,8 @@
 
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="步长：" FontSize="20" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
                         <TextBox x:Name="velocity_tb" Grid.Row="0" Grid.Column="1" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput">
-                            100
+                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput" InputMethod.IsInputMethodEnabled="False">
+                            10
                         </TextBox>
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="mm" FontSize="15" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
 
@@ -368,6 +367,22 @@
                         </Button>
 
 
+
+                    </Grid>
+
+                    <Grid Grid.Row="2" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <!--<ColumnDefinition Width="*" />-->
+                            <!--<ColumnDefinition Width="*" />-->
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="t_tdc_detail" Grid.Row="0" Grid.Column="0" Height="40" Text="" FontSize="15" Foreground="White"></TextBlock>
+                        <!--<TextBlock x:Name="cc" Grid.Row="0" Grid.Column="1" Height="40" Text=" : " FontSize="15" Foreground="White"></TextBlock>
+                        <TextBlock x:Name="bb" Grid.Row="0" Grid.Column="2" Height="40" Text="aaaa" FontSize="15" Foreground="White"></TextBlock>-->
 
                     </Grid>
 

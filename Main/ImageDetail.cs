@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LightConductor.Main
 {
-    class ImageDetail
+    public class ImageDetail
     {
         private int height;
         private int width;
@@ -16,6 +16,10 @@ namespace LightConductor.Main
 
         public ImageDetail()
         {
+            this.height = 0;
+            this.width = 0;
+            this.pX = 0;
+            this.pY = 0;
         }
 
         public ImageDetail(int height, int width, double pX, double pY)

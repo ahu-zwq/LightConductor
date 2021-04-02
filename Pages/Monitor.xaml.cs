@@ -42,28 +42,32 @@ namespace LightConductor.Pages
         CameraPair cameraPair_v2;
         //TDCHandle tdcHandle_v;
         //TDCHandle tdcHandle_h;
-        public static string IMAGE_V1_PATH = "D:\\LC\\image_v1.jpg";
-        public static string IMAGE_V2_PATH = "D:\\LC\\image_v2.jpg";
-        public static string IMAGE_TEMP_PATH = "D:\\LC\\image_v2.jpg";
+        //public static string IMAGE_V1_PATH = "D:\\LC\\image_v1.jpg";
+        //public static string IMAGE_V2_PATH = "D:\\LC\\image_v2.jpg";
+        //public static string IMAGE_TEMP_PATH = "D:\\LC\\image_v2.jpg";
         public static int TIME_MILLISECONDS = Convert.ToInt32(ConfigurationManager.AppSettings["catch_position_interval"]);
         public static int TDC_MAX_VELOCITY = Convert.ToInt32(ConfigurationManager.AppSettings["tdc_max_velocity"]);
+        public static string SPOT_LOCATIOIN_METHOD = ConfigurationManager.AppSettings["spot_location_method"];
+        public static string TMP = System.Environment.GetEnvironmentVariable("TMP") + System.IO.Path.DirectorySeparatorChar + "LC" + System.IO.Path.DirectorySeparatorChar;
 
         //光斑中心坐标
-        private SpotPosition SpotPosition_v1_mark;
-        private SpotPosition SpotPosition_v1_real;
-        private SpotPosition SpotPosition_v2_mark;
-        private SpotPosition SpotPosition_v2_real;
+        private SpotPosition SpotPosition_v1_mark = new SpotPosition(0, 0);
+        private SpotPosition SpotPosition_v1_real = new SpotPosition(0, 0);
+        private SpotPosition SpotPosition_v2_mark = new SpotPosition(0, 0);
+        private SpotPosition SpotPosition_v2_real = new SpotPosition(0, 0);
 
-        private PicLabel picLabel_v1;
-        private PicLabel picLabel_v2;
+        private PicLabel picLabel_v1 = new PicLabel("");
+        private PicLabel picLabel_v2 = new PicLabel("");
 
-        private PicLabel picLabel_t1;
-        private PicLabel picLabel_t2;
-        private PicLabel picLabel_t3;
-        private PicLabel picLabel_t4;
-        private PicLabel picLabel_t5;
-        private PicLabel picLabel_t6;
-        private PicLabel picLabel_t7;
+        private PicLabel picLabel_t1 = new PicLabel("");
+        private PicLabel picLabel_t2 = new PicLabel("");
+        private PicLabel picLabel_t3 = new PicLabel("");
+        private PicLabel picLabel_t4 = new PicLabel("");
+        private PicLabel picLabel_t5 = new PicLabel("");
+        private PicLabel picLabel_t6 = new PicLabel("");
+        private PicLabel picLabel_t7 = new PicLabel("");
+
+        private TDCDetail tdc_detail = new TDCDetail();
 
 
         public Monitor()
@@ -83,29 +87,29 @@ namespace LightConductor.Pages
         private void InitBinding()
         {
             Log.Info("InitPoint");
-            SpotPosition_v1_mark = new SpotPosition(0, 0);
-            SpotPosition_v1_real = new SpotPosition(0, 0);
+            //SpotPosition_v1_mark = new SpotPosition(0, 0);
+            //SpotPosition_v1_real = new SpotPosition(0, 0);
             pointBinding(SpotPosition_v1_mark, null, rect_v1_s, line_h_v1_s, line_v_v1_s, text_v1_s);
             pointBinding(SpotPosition_v1_real, point_v1_n, null, line_h_v1_n, line_v_v1_n, text_v1_n);
 
-            SpotPosition_v2_mark = new SpotPosition(0, 0);
-            SpotPosition_v2_real = new SpotPosition(0, 0);
+            //SpotPosition_v2_mark = new SpotPosition(0, 0);
+            //SpotPosition_v2_real = new SpotPosition(0, 0);
             pointBinding(SpotPosition_v2_mark, null, rect_v2_s, line_h_v2_s, line_v_v2_s, text_v2_s);
             pointBinding(SpotPosition_v2_real, point_v2_n, null, line_h_v2_n, line_v_v2_n, text_v2_n);
 
-            picLabel_v1 = new PicLabel("");
-            picLabel_v2 = new PicLabel("");
+            //picLabel_v1 = new PicLabel("");
+            //picLabel_v2 = new PicLabel("");
             labelBinding(picLabel_v1, label_v1);
             labelBinding(picLabel_v2, label_v2);
 
 
-            picLabel_t1 = new PicLabel("");
-            picLabel_t2 = new PicLabel("");
-            picLabel_t3 = new PicLabel("");
-            picLabel_t4 = new PicLabel("");
-            picLabel_t5 = new PicLabel("");
-            picLabel_t6 = new PicLabel("");
-            picLabel_t7 = new PicLabel("");
+            //picLabel_t1 = new PicLabel("");
+            //picLabel_t2 = new PicLabel("");
+            //picLabel_t3 = new PicLabel("");
+            //picLabel_t4 = new PicLabel("");
+            //picLabel_t5 = new PicLabel("");
+            //picLabel_t6 = new PicLabel("");
+            //picLabel_t7 = new PicLabel("");
             labelBinding(picLabel_t1, top_label_1);
             labelBinding(picLabel_t2, top_label_2);
             labelBinding(picLabel_t3, top_label_3);
@@ -114,6 +118,8 @@ namespace LightConductor.Pages
             labelBinding(picLabel_t6, top_label_6);
             labelBinding(picLabel_t7, top_label_7);
 
+
+            t_tdc_detail.SetBinding(TextBlock.TextProperty, new Binding("TdcDetail") { Source = tdc_detail, Mode = BindingMode.OneWay });
 
             //UIElementCollection children = top_devices.Children;
             //int tb = 0;
@@ -197,18 +203,17 @@ namespace LightConductor.Pages
         {
             Log.Info("-------TIMER bigin");
             DateTime n1 = DateTime.Now;
-            startCatchJpeg(cameraPair_v1, IMAGE_V1_PATH, SpotPosition_v1_mark, SpotPosition_v1_real);
-            startCatchJpeg(cameraPair_v2, IMAGE_V2_PATH, SpotPosition_v2_mark, SpotPosition_v2_real);
+            startCatchJpeg(cameraPair_v1, SpotPosition_v1_mark, SpotPosition_v1_real);
+            startCatchJpeg(cameraPair_v2, SpotPosition_v2_mark, SpotPosition_v2_real);
             DateTime n2 = DateTime.Now;
             Log.Info("-------TIMER end ：" + DateUtils.DateDiff(n2, n1) + " ms");
         }
 
-        private void startCatchJpeg(CameraPair cameraPair, string imagePath, SpotPosition SpotPosition_mark, SpotPosition SpotPosition_real)
+        private void startCatchJpeg(CameraPair cameraPair, SpotPosition SpotPosition_mark, SpotPosition SpotPosition_real)
         {
 
             if (cameraPair != null)
             {
-                DateTime t1 = DateTime.Now;
                 DeviceModule deviceModule = cameraPair.DeviceModule;
                 if (deviceModule.Datum_x > 0 || deviceModule.Datum_y > 0)
                 {
@@ -220,28 +225,61 @@ namespace LightConductor.Pages
                     SpotPosition_mark.A_x = 0;
                     SpotPosition_mark.A_y = 0;
                 }
-                DateTime t2 = DateTime.Now;
-                byte[] bytes = cameraPair.MainVideoHandle.btnJPEG_Byte();
 
-                DateTime t3 = DateTime.Now;
-                if (bytes.Length > 0)
+                switch (SPOT_LOCATIOIN_METHOD)
                 {
+                    case "1":
+                        fromMatlab(cameraPair, SpotPosition_real);
+                        break;
+                    default:
+                        fromOpenCV(cameraPair, SpotPosition_real);
+                        break;
 
-                    ImageDetail imageDetail = OpenCVUtils.getHighPoint(bytes);
-                    //ImageDetail imageDetail = OpenCVUtils.getHighPoint(imagePath);
-                    SpotPosition_real.A_x = imageDetail.PX;
-                    SpotPosition_real.A_y = imageDetail.PY;
+                }
 
-                    cameraPair.ImageDetail = imageDetail;
-                }
-                else
-                {
-                    SpotPosition_real.A_x = 0;
-                    SpotPosition_real.A_y = 0;
-                }
-                DateTime t4 = DateTime.Now;
-                Log.InfoFormat("TIMER catchPic:{0}, getHighPoint:{1}", DateUtils.DateDiff(t3, t2), DateUtils.DateDiff(t4, t3));
             }
+        }
+
+        private static void fromOpenCV(CameraPair cameraPair, SpotPosition SpotPosition_real)
+        {
+            DateTime t1 = DateTime.Now;
+            byte[] bytes = cameraPair.MainVideoHandle.btnJPEG_Byte();
+
+            DateTime t2 = DateTime.Now;
+            if (bytes.Length > 0)
+            {
+                ImageDetail imageDetailO = OpenCVUtils.getHighPoint(bytes);
+                SpotPosition_real.A_x = imageDetailO.PX;
+                SpotPosition_real.A_y = imageDetailO.PY;
+                cameraPair.ImageDetail = imageDetailO;
+            }
+            else
+            {
+                SpotPosition_real.A_x = 0;
+                SpotPosition_real.A_y = 0;
+            }
+            DateTime t3 = DateTime.Now;
+            Log.InfoFormat("TIMER -opencv catchPic:{0}, getHighPoint:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
+        }
+
+        private static void fromMatlab(CameraPair cameraPair, SpotPosition SpotPosition_real)
+        {
+            DateTime t1 = DateTime.Now;
+            if (Directory.Exists(TMP) == false)
+            {
+                Directory.CreateDirectory(TMP);
+            }
+            string picPath = TMP + System.Guid.NewGuid().ToString() + ".jpg";
+            cameraPair.MainVideoHandle.btnJPEG_File(picPath);
+
+            DateTime t2 = DateTime.Now;
+            ImageDetail imageDetailM = MatlabCVUtils.getHighPoint(picPath);
+            SpotPosition_real.A_x = imageDetailM.PX;
+            SpotPosition_real.A_y = imageDetailM.PY;
+            cameraPair.ImageDetail = imageDetailM;
+
+            DateTime t3 = DateTime.Now;
+            Log.InfoFormat("TIMER -matlab catchPic:{0}, getHighPoint:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
         }
 
 
@@ -426,7 +464,7 @@ namespace LightConductor.Pages
             DateTime t = DateTime.Now;
             logAllPoint(getBeforeMoveLogName(t, "left"));
 
-            Move(cameraPair_v1.HorizontalTDC, false);
+            Move(cameraPair_v1.HorizontalTDC, true);
 
             ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "left"));
         }
@@ -436,7 +474,7 @@ namespace LightConductor.Pages
             DateTime t = DateTime.Now;
             logAllPoint(getBeforeMoveLogName(t, "right"));
 
-            Move(cameraPair_v1.HorizontalTDC, true);
+            Move(cameraPair_v1.HorizontalTDC, false);
 
             ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "right"));
         }
@@ -471,6 +509,9 @@ namespace LightConductor.Pages
                     v = -v;
                 }
                 tDCHandle.Move(v, TDC_MAX_VELOCITY);
+
+                tdc_detail.SerialNo = tDCHandle.SerialNo;
+                tdc_detail.Position = tDCHandle.getPosition();
             }
             catch (Exception e)
             {
@@ -550,7 +591,7 @@ namespace LightConductor.Pages
 
         private void tb_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            Regex re = new Regex("[^0-9.-]+");
+            Regex re = new Regex("[^0-9.]+");
 
             e.Handled = re.IsMatch(e.Text);
 
@@ -575,14 +616,14 @@ namespace LightConductor.Pages
 
             for (int i = 0; i < CAMERA_PAIR_LIST.Count; i++)
             {
-                try 
+                try
                 {
                     CameraPair cameraPair = CAMERA_PAIR_LIST[i];
                     cameraPair.TopVideoHandle.Stop();
                     cameraPair.MainVideoHandle.Stop();
                     cameraPair.VerticalTDC.Dispose();
                     cameraPair.HorizontalTDC.Dispose();
-                } 
+                }
                 catch (Exception e)
                 {
                     Log.Error(e);
