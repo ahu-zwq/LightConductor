@@ -403,7 +403,7 @@ namespace LightConductor.Pages
         {
             if (!picLabel_v1.Pic_label.Equals(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name) || string.IsNullOrWhiteSpace(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name))
             {
-
+                
                 cleanPictureBox(cameraPair_v1, pictureBoxHost_v1);
                 cleanPictureBox(cameraPair_v2, pictureBoxHost_v2);
 
@@ -411,12 +411,14 @@ namespace LightConductor.Pages
                 cameraPair_v2 = CAMERA_PAIR_LIST[PictureBoxNum];
                 //tdcHandle_v = CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC;
                 //tdcHandle_h = CAMERA_PAIR_LIST[PictureBoxNum - 1].HorizontalTDC;
-
+                
                 cameraPair_v1.MainVideoHandle.btnPreview_Click(pictureBoxHost_v1);
                 cameraPair_v2.MainVideoHandle.btnPreview_Click(pictureBoxHost_v2);
 
                 picLabel_v1.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum - 1].Name;
                 picLabel_v2.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum].Name;
+
+                
             }
         }
 
@@ -424,9 +426,12 @@ namespace LightConductor.Pages
         {
             if (cameraPair != null)
             {
+                //DateTime t1 = DateTime.Now;
                 cameraPair.MainVideoHandle.StopRealPlay();
+                //DateTime t2 = DateTime.Now;
                 cameraPair.MainVideoHandle.RefreshPicture();
-
+                //DateTime t3 = DateTime.Now;
+                //Log.InfoFormat(">>>>> StopRealPlay:{0}, RefreshPicture:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
             }
         }
 

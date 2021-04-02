@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,10 @@ namespace LightConductor.Main
             ImageDetail detail = new ImageDetail();
             try
             {
+                if (!File.Exists(imgPath))
+                {
+                    return detail;
+                }
                 MWArray mw = imgPath;
                 imageproNative.Class1 class11 = new imageproNative.Class1();
                 object[] vs = class11.imagepro(2, mw);
