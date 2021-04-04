@@ -226,43 +226,54 @@ namespace LightConductor.Pages
                     SpotPosition_mark.A_y = 0;
                 }
 
-                switch (SPOT_LOCATIOIN_METHOD)
-                {
-                    case "1":
-                        fromMatlab(cameraPair, SpotPosition_real);
-                        break;
-                    default:
-                        fromOpenCV(cameraPair, SpotPosition_real);
-                        break;
-
-                }
+                ImageDetail imageDetail = runSpotLocation(cameraPair.MainVideoHandle);
+                SpotPosition_real.A_x = imageDetail.PX;
+                SpotPosition_real.A_y = imageDetail.PY;
+                cameraPair.ImageDetail = imageDetail;
 
             }
         }
 
-        private static void fromOpenCV(CameraPair cameraPair, SpotPosition SpotPosition_real)
+        private static ImageDetail runSpotLocation(VideoHandle videoHandle)
+        {
+            ImageDetail imageDetail;
+            switch (SPOT_LOCATIOIN_METHOD)
+            {
+                case "1":
+                    imageDetail = fromMatlab(videoHandle);
+                    break;
+                default:
+                    imageDetail = fromOpenCV(videoHandle);
+                    break;
+            }
+            return imageDetail;
+        }
+
+        private static ImageDetail fromOpenCV(VideoHandle videoHandle)
         {
             DateTime t1 = DateTime.Now;
-            byte[] bytes = cameraPair.MainVideoHandle.btnJPEG_Byte();
+            ImageDetail imageDetail = new ImageDetail();
+            byte[] bytes = videoHandle.btnJPEG_Byte();
 
             DateTime t2 = DateTime.Now;
             if (bytes.Length > 0)
             {
-                ImageDetail imageDetailO = OpenCVUtils.getHighPoint(bytes);
-                SpotPosition_real.A_x = imageDetailO.PX;
-                SpotPosition_real.A_y = imageDetailO.PY;
-                cameraPair.ImageDetail = imageDetailO;
+                imageDetail = OpenCVUtils.getHighPoint(bytes);
+                //SpotPosition_real.A_x = imageDetailO.PX;
+                //SpotPosition_real.A_y = imageDetailO.PY;
+                //cameraPair.ImageDetail = imageDetailO;
             }
             else
             {
-                SpotPosition_real.A_x = 0;
-                SpotPosition_real.A_y = 0;
+                //SpotPosition_real.A_x = 0;
+                //SpotPosition_real.A_y = 0;
             }
             DateTime t3 = DateTime.Now;
             Log.InfoFormat("TIMER -opencv catchPic:{0}, getHighPoint:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
+            return imageDetail;
         }
 
-        private static void fromMatlab(CameraPair cameraPair, SpotPosition SpotPosition_real)
+        private static ImageDetail fromMatlab(VideoHandle videoHandle)
         {
             DateTime t1 = DateTime.Now;
             if (Directory.Exists(TMP) == false)
@@ -270,16 +281,18 @@ namespace LightConductor.Pages
                 Directory.CreateDirectory(TMP);
             }
             string picPath = TMP + System.Guid.NewGuid().ToString() + ".jpg";
-            cameraPair.MainVideoHandle.btnJPEG_File(picPath);
+            videoHandle.btnJPEG_File(picPath);
 
             DateTime t2 = DateTime.Now;
             ImageDetail imageDetailM = MatlabCVUtils.getHighPoint(picPath);
-            SpotPosition_real.A_x = imageDetailM.PX;
-            SpotPosition_real.A_y = imageDetailM.PY;
-            cameraPair.ImageDetail = imageDetailM;
+            //SpotPosition_real.A_x = imageDetailM.PX;
+            //SpotPosition_real.A_y = imageDetailM.PY;
+            //cameraPair.ImageDetail = imageDetailM;
 
             DateTime t3 = DateTime.Now;
             Log.InfoFormat("TIMER -matlab catchPic:{0}, getHighPoint:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
+
+            return imageDetailM;
         }
 
 
@@ -403,7 +416,7 @@ namespace LightConductor.Pages
         {
             if (!picLabel_v1.Pic_label.Equals(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name) || string.IsNullOrWhiteSpace(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name))
             {
-                
+
                 cleanPictureBox(cameraPair_v1, pictureBoxHost_v1);
                 cleanPictureBox(cameraPair_v2, pictureBoxHost_v2);
 
@@ -411,14 +424,14 @@ namespace LightConductor.Pages
                 cameraPair_v2 = CAMERA_PAIR_LIST[PictureBoxNum];
                 //tdcHandle_v = CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC;
                 //tdcHandle_h = CAMERA_PAIR_LIST[PictureBoxNum - 1].HorizontalTDC;
-                
+
                 cameraPair_v1.MainVideoHandle.btnPreview_Click(pictureBoxHost_v1);
                 cameraPair_v2.MainVideoHandle.btnPreview_Click(pictureBoxHost_v2);
 
                 picLabel_v1.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum - 1].Name;
                 picLabel_v2.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum].Name;
 
-                
+
             }
         }
 
@@ -445,11 +458,12 @@ namespace LightConductor.Pages
         private void Up_click(object sender, RoutedEventArgs e)
         {
             DateTime t = DateTime.Now;
-            logAllPoint(getBeforeMoveLogName(t, "up"));
+            TDCHandle tdc = cameraPair_v1.VerticalTDC;
+            logAllPoint(getBeforeMoveLogName(t, "up", tdc.getPosition()));
 
-            Move(cameraPair_v1.VerticalTDC, false);
+            Move(tdc, false);
 
-            ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "up"));
+            ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "up", tdc.getPosition()));
         }
 
 
@@ -457,42 +471,45 @@ namespace LightConductor.Pages
         private void Down_click(object sender, RoutedEventArgs e)
         {
             DateTime t = DateTime.Now;
-            logAllPoint(getBeforeMoveLogName(t, "dwon"));
+            TDCHandle tdc = cameraPair_v1.VerticalTDC;
+            logAllPoint(getBeforeMoveLogName(t, "dwon", tdc.getPosition()));
 
-            Move(cameraPair_v1.VerticalTDC, true);
+            Move(tdc, true);
 
-            ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "dwon"));
+            ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "dwon", tdc.getPosition()));
         }
 
         private void Left_click(object sender, RoutedEventArgs e)
         {
             DateTime t = DateTime.Now;
-            logAllPoint(getBeforeMoveLogName(t, "left"));
+            TDCHandle tdc = cameraPair_v1.HorizontalTDC;
+            logAllPoint(getBeforeMoveLogName(t, "left", tdc.getPosition()));
 
-            Move(cameraPair_v1.HorizontalTDC, true);
+            Move(tdc, true);
 
-            ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "left"));
+            ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "left", tdc.getPosition()));
         }
 
         private void Right_click(object sender, RoutedEventArgs e)
         {
             DateTime t = DateTime.Now;
-            logAllPoint(getBeforeMoveLogName(t, "right"));
+            TDCHandle tdc = cameraPair_v1.HorizontalTDC;
+            logAllPoint(getBeforeMoveLogName(t, "right", tdc.getPosition()));
 
-            Move(cameraPair_v1.HorizontalTDC, false);
+            Move(tdc, false);
 
-            ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "right"));
+            ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "right", tdc.getPosition()));
         }
 
 
-        private string getBeforeMoveLogName(DateTime t, string direction)
+        private string getBeforeMoveLogName(DateTime t, string direction, Decimal position)
         {
-            return string.Format("----MOVE {0}, deviceId:{1}, {2}, 移动前", t.ToString(), cameraPair_v1.Id, direction, velocity_tb.Text);
+            return string.Format("----MOVE {0}, deviceId:{1}, {2}, {3}, 移动前: pos-{4}", t.ToString(), cameraPair_v1.Id, direction, velocity_tb.Text, position);
         }
 
-        private string getAfterMoveLogName(DateTime t, string direction)
+        private string getAfterMoveLogName(DateTime t, string direction, Decimal position)
         {
-            return string.Format("----MOVE {0}, deviceId:{1}, {2}, 移动后", t.ToString(), cameraPair_v1.Id, direction, velocity_tb.Text);
+            return string.Format("----MOVE {0}, deviceId:{1}, {2}, {3}, 移动后: pos-{4}", t.ToString(), cameraPair_v1.Id, direction, velocity_tb.Text, position);
         }
 
 
@@ -568,23 +585,26 @@ namespace LightConductor.Pages
             for (int i = 0; i < count; i++)
             {
                 CameraPair cameraPair = CAMERA_PAIR_LIST[i];
-                byte[] bytes = cameraPair.MainVideoHandle.btnJPEG_Byte();
+
+                ImageDetail imageDetail = runSpotLocation(cameraPair.MainVideoHandle);
+
+                //byte[] bytes = cameraPair.MainVideoHandle.btnJPEG_Byte();
                 //bool b = cameraPair.MainVideoHandle.btnJPEG_File(IMAGE_TEMP_PATH);
                 DeviceModule deviceModule = cameraPair.DeviceModule;
                 double Datum_x = Double.NaN;
                 double Datum_y = Double.NaN;
                 //if (File.Exists(IMAGE_TEMP_PATH) && b) 
-                if (bytes.Length > 0)
-                {
-                    ImageDetail imageDetail = OpenCVUtils.getHighPoint(bytes);
-                    //ImageDetail imageDetail = OpenCVUtils.getHighPoint(IMAGE_TEMP_PATH);
+                //if (bytes.Length > 0)
+                //{
+                //ImageDetail imageDetail = OpenCVUtils.getHighPoint(bytes);
+                //ImageDetail imageDetail = OpenCVUtils.getHighPoint(IMAGE_TEMP_PATH);
 
-                    if (imageDetail.PX > 0 || imageDetail.PY > 0)
-                    {
-                        Datum_x = imageDetail.PX;
-                        Datum_y = SpotPosition.Max_Height - imageDetail.PY;
-                    }
+                if (imageDetail.PX > 0 || imageDetail.PY > 0)
+                {
+                    Datum_x = imageDetail.PX;
+                    Datum_y = SpotPosition.Max_Height - imageDetail.PY;
                 }
+                //}
                 deviceModule.Datum_x = Datum_x;
                 deviceModule.Datum_y = Datum_y;
                 deviceModule.updateConfig();

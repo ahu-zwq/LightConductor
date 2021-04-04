@@ -39,6 +39,7 @@ namespace LightConductor
                 {
                     datum_x = value;
                     OnPropertyChanged("Datum_x");
+                    OnPropertyChanged("Datum_pos");
                 }
             } }
         public double Datum_y { get => datum_y; set {
@@ -46,6 +47,7 @@ namespace LightConductor
                 {
                     datum_y = value;
                     OnPropertyChanged("Datum_y");
+                    OnPropertyChanged("Datum_pos");
                 }
             } }
         public string Datum_pos
