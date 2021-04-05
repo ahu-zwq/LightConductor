@@ -300,16 +300,16 @@
 
                         </Grid>
 
+                        <Button Content="重置基准点" Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                        <Button Content="配置刷新" Grid.Row="0" Grid.Column="1"  Click="Reset_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                       
                         <!--<TextBlock Grid.Row="0" Grid.Column="0" Text="自动模式：" FontSize="18" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
                         --><!--<CheckBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" x:Name="auto_control" Checked="Open_Auto" Unchecked="Close_Auto" VerticalAlignment="Center" Content="OFF" Tag="NO" BorderThickness="1,1,0,1" Style="{DynamicResource CheckBoxSwitchStyle}" />--><!--
 
                         <Button Content="&#xe60f;" FontFamily="/LightConductor;component/Resources/#iconfont" Foreground="#FF707070"  FontSize="50" Grid.Row="0" Grid.Column="1" Height="30" Width="60" Style="{StaticResource CheckAutoBtnStyle}" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
                         <Button Content="&#xe60e;" FontFamily="/LightConductor;component/Resources/#iconfont" Foreground="Green"  FontSize="50" Grid.Row="0" Grid.Column="1" Height="30" Width="60" Style="{StaticResource CheckAutoBtnStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" />-->
-
-                        <Button Content="重置基准点" Grid.Row="1" Grid.Column="0"  Click="Save_Datum_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
-
-                        <Button Content="配置刷新" Grid.Row="1" Grid.Column="1"  Click="Reset_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
                     </Grid>
 
