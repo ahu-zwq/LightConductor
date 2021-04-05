@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using log4net;
 using System.Reflection;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace LightConductor.Pages
 {
@@ -180,11 +181,19 @@ namespace LightConductor.Pages
 
         private void startTimer()
         {
+            //main
             Log.Info("开始定时任务，" + TIME_MILLISECONDS);
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             aTimer.Interval = TIME_MILLISECONDS;
             aTimer.Enabled = true;
+
+
+            //clearTMP 每5分钟清理临时目录
+            System.Timers.Timer clearTimer = new System.Timers.Timer();
+            clearTimer.Elapsed += new ElapsedEventHandler(OnTimedEventClear);
+            clearTimer.Interval = 1000 * 60 * 5;
+            clearTimer.Enabled = true;
 
         }
         private delegate void TimerDispatcherDelegate();
@@ -193,6 +202,10 @@ namespace LightConductor.Pages
             TimeAction();
         }
 
+        private void OnTimedEventClear(object sender, EventArgs e)
+        {
+            ClearTMP();
+        }
 
         private void TimeAction(object sender, EventArgs e)
         {
@@ -280,6 +293,8 @@ namespace LightConductor.Pages
             {
                 Directory.CreateDirectory(TMP);
             }
+            //ClearTMP();
+
             string picPath = TMP + System.Guid.NewGuid().ToString() + ".jpg";
             videoHandle.btnJPEG_File(picPath);
 
@@ -293,6 +308,38 @@ namespace LightConductor.Pages
             Log.InfoFormat("TIMER -matlab catchPic:{0}, getHighPoint:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
 
             return imageDetailM;
+        }
+
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private static void ClearTMP()
+        {
+            DirectoryInfo folder = new DirectoryInfo(TMP);
+            FileInfo[] fileInfos = folder.GetFiles();
+            if (fileInfos.Length > 500)
+            {
+                Log.InfoFormat("正在清理文件夹，{0}，{1}", fileInfos.Length, TMP);
+                int k = 0;
+                for (int i = 0; i < fileInfos.Length; i++)
+                {
+                    FileInfo fileInfo = fileInfos[i];
+                    DateTime creationTime = fileInfo.CreationTime;
+                    double v = DateUtils.DateDiff(DateTime.Now, creationTime);
+                    if (v > 1000 * 60 * 5)
+                    {
+                        try
+                        {
+                            fileInfo.Delete();
+                            k++;
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e.Message);
+                        }
+                    }
+                }
+                Log.InfoFormat("清理完毕，已清理 {0} 个文件", k);
+            }
         }
 
 
