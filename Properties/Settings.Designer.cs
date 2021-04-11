@@ -22,5 +22,14 @@ namespace LightConductor.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int StreamType {
+            get {
+                return ((int)(this["StreamType"]));
+            }
+        }
     }
 }

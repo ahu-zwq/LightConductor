@@ -25,6 +25,7 @@ namespace LightConductor
         private double datum_x;
         private double datum_y;
         private string datum_pos;
+        private decimal velocity;
 
         public string Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
@@ -70,6 +71,26 @@ namespace LightConductor
                 {
                     datum_pos = value;
                     OnPropertyChanged("Datum_pos");
+                }
+            }
+        }
+
+        public decimal Velocity
+        {
+            get
+            {
+                if (velocity <= 0)
+                {
+                    return 1;
+                }
+                return velocity;
+            }
+            set
+            {
+                if (velocity != value && value > 0)
+                {
+                    velocity = value;
+                    OnPropertyChanged("Velocity");
                 }
             }
         }
@@ -134,6 +155,7 @@ namespace LightConductor
                     old.Datum_x = this.Datum_x;
                     old.Datum_y = this.Datum_y;
                     old.Datum_pos = this.Datum_pos;
+                    old.velocity = this.velocity;
 
                     JsonNewtonsoft.WritingJson(Setting_D.SettingPath, lists);
 

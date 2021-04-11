@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LightConductor.Pages"
       mc:Ignorable="d" 
+      xmlns:settings="clr-namespace:LightConductor.Properties"
       xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
       xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
       d:DesignHeight="1000" d:DesignWidth="1920"
@@ -117,7 +118,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="304"/>
+                        <RowDefinition Height="298"/>
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" Grid.Column="0" Background="#FFCFCFCF" Width="570" >
@@ -302,8 +303,10 @@
 
                         <Button Content="重置基准点" Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-                        <Button Content="配置刷新" Grid.Row="0" Grid.Column="1"  Click="Reset_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                       
+                        <Button Content="配置更新" Grid.Row="0" Grid.Column="1"  Click="Reset_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                        
+
                         <!--<TextBlock Grid.Row="0" Grid.Column="0" Text="自动模式：" FontSize="18" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
                         --><!--<CheckBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" x:Name="auto_control" Checked="Open_Auto" Unchecked="Close_Auto" VerticalAlignment="Center" Content="OFF" Tag="NO" BorderThickness="1,1,0,1" Style="{DynamicResource CheckBoxSwitchStyle}" />--><!--
 
@@ -313,10 +316,32 @@
 
                     </Grid>
 
+                    <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="刷新频率：" FontSize="15" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" ></TextBlock>
+                        <TextBox x:Name="tb_refresh_rate" Grid.Row="0" Grid.Column="2" Height="30" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" TextChanged="tb_refresh_rate_TextChanged" PreviewTextInput="tb_rate_PreviewTextInput" InputMethod.IsInputMethodEnabled="False"></TextBox>
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="次/分钟" FontSize="12" Foreground="White"  VerticalAlignment="Center" ></TextBlock>
+
+
+                    </Grid>
+
                     <Border Height="3" Grid.Row="1" Grid.Column="0" BorderBrush="LightGray" BorderThickness="0,0,0,2" VerticalAlignment="Bottom" />
 
-                    <Grid Grid.Row="2" Grid.Column="0" Height="60" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0" >
+                    <Grid Grid.Row="2" Grid.Column="0" Height="60" VerticalAlignment="Top" Margin="0,30,0,0" >
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -325,12 +350,12 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="步长：" FontSize="20" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
-                        <TextBox x:Name="velocity_tb" Grid.Row="0" Grid.Column="1" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput" InputMethod.IsInputMethodEnabled="False">
-                            10
-                        </TextBox>
-                        <TextBlock Grid.Row="0" Grid.Column="2" Text="mm" FontSize="15" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Path=Text, ElementName=label_v1}" FontSize="20" Foreground="#FF8DD28A" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="速率：" FontSize="18" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
+                        <TextBox x:Name="velocity_tb" Grid.Row="0" Grid.Column="2" Height="30" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput" InputMethod.IsInputMethodEnabled="False"></TextBox>
+                        
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="mm/s" FontSize="15" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" ></TextBlock>
 
 
                     </Grid>

@@ -143,6 +143,7 @@
     <Compile Include="Main\CameraPair.cs" />
     <Compile Include="Main\CanvasHandle.cs" />
     <Compile Include="Main\ImageDetail.cs" />
+    <Compile Include="Main\IUserSettings.cs" />
     <Compile Include="Main\JsonNewtonsoft.cs" />
     <Compile Include="Main\LogUtils.cs" />
     <Compile Include="Main\MatlabCVUtils.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Main\SpotPosition.cs" />
     <Compile Include="Main\TDCDetail.cs" />
     <Compile Include="Main\TDCHandle.cs" />
+    <Compile Include="Main\UserSettings.cs" />
     <Compile Include="Pages\Monitor.xaml.cs">
       <DependentUpon>Monitor.xaml</DependentUpon>
     </Compile>

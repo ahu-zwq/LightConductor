@@ -23,6 +23,7 @@ using log4net;
 using System.Reflection;
 using System.Configuration;
 using System.Runtime.CompilerServices;
+using LightConductor.Properties;
 
 namespace LightConductor.Pages
 {
@@ -46,10 +47,12 @@ namespace LightConductor.Pages
         //public static string IMAGE_V1_PATH = "D:\\LC\\image_v1.jpg";
         //public static string IMAGE_V2_PATH = "D:\\LC\\image_v2.jpg";
         //public static string IMAGE_TEMP_PATH = "D:\\LC\\image_v2.jpg";
-        public static int TIME_MILLISECONDS = Convert.ToInt32(ConfigurationManager.AppSettings["catch_position_interval"]);
+        //public static int TIME_MILLISECONDS = Convert.ToInt32(ConfigurationManager.AppSettings["catch_position_interval"]);
         public static int TDC_MAX_VELOCITY = Convert.ToInt32(ConfigurationManager.AppSettings["tdc_max_velocity"]);
         public static string SPOT_LOCATIOIN_METHOD = ConfigurationManager.AppSettings["spot_location_method"];
         public static string TMP = System.Environment.GetEnvironmentVariable("TMP") + System.IO.Path.DirectorySeparatorChar + "LC" + System.IO.Path.DirectorySeparatorChar;
+        public static string REFRESH_RATE_NAME = "refresh_rate";
+        public static int REFRESH_RATE_DEFAULT = 60;
 
         //光斑中心坐标
         private SpotPosition SpotPosition_v1_mark = new SpotPosition(0, 0);
@@ -60,6 +63,8 @@ namespace LightConductor.Pages
         private PicLabel picLabel_v1 = new PicLabel("");
         private PicLabel picLabel_v2 = new PicLabel("");
 
+        private PicLabel velocityLabel = new PicLabel("1");
+
         private PicLabel picLabel_t1 = new PicLabel("");
         private PicLabel picLabel_t2 = new PicLabel("");
         private PicLabel picLabel_t3 = new PicLabel("");
@@ -69,6 +74,8 @@ namespace LightConductor.Pages
         private PicLabel picLabel_t7 = new PicLabel("");
 
         private TDCDetail tdc_detail = new TDCDetail();
+
+        private System.Timers.Timer mainTimer = new System.Timers.Timer();
 
 
         public Monitor()
@@ -103,6 +110,7 @@ namespace LightConductor.Pages
             labelBinding(picLabel_v1, label_v1);
             labelBinding(picLabel_v2, label_v2);
 
+            velocityBinding(velocityLabel, velocity_tb);
 
             //picLabel_t1 = new PicLabel("");
             //picLabel_t2 = new PicLabel("");
@@ -122,6 +130,7 @@ namespace LightConductor.Pages
 
             t_tdc_detail.SetBinding(TextBlock.TextProperty, new Binding("TdcDetail") { Source = tdc_detail, Mode = BindingMode.OneWay });
 
+            tb_refresh_rate.Text = UserSettings.Instance.Get(REFRESH_RATE_NAME, "" + REFRESH_RATE_DEFAULT);
             //UIElementCollection children = top_devices.Children;
             //int tb = 0;
             //int wf = 0;
@@ -147,6 +156,11 @@ namespace LightConductor.Pages
         private void labelBinding(PicLabel label, TextBlock text)
         {
             text.SetBinding(TextBlock.TextProperty, new Binding("Pic_label") { Source = label, Mode = BindingMode.OneWay });
+
+        }
+        private void velocityBinding(PicLabel label, TextBox text)
+        {
+            text.SetBinding(TextBox.TextProperty, new Binding("Pic_label") { Source = label, Mode = BindingMode.TwoWay });
 
         }
 
@@ -182,11 +196,11 @@ namespace LightConductor.Pages
         private void startTimer()
         {
             //main
-            Log.Info("开始定时任务，" + TIME_MILLISECONDS);
-            System.Timers.Timer aTimer = new System.Timers.Timer();
-            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Interval = TIME_MILLISECONDS;
-            aTimer.Enabled = true;
+            int timeInterval = getTimetInterval();
+            Log.Info("开始定时任务，" + timeInterval);
+            mainTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            mainTimer.Interval = timeInterval;
+            mainTimer.Enabled = true;
 
 
             //clearTMP 每5分钟清理临时目录
@@ -315,6 +329,10 @@ namespace LightConductor.Pages
         private static void ClearTMP()
         {
             DirectoryInfo folder = new DirectoryInfo(TMP);
+            if (!folder.Exists)
+            {
+                return;
+            }
             FileInfo[] fileInfos = folder.GetFiles();
             if (fileInfos.Length > 500)
             {
@@ -415,6 +433,7 @@ namespace LightConductor.Pages
             picLabel_t6.Pic_label = CAMERA_PAIR_LIST[5].DeviceModule.Name;
             picLabel_t7.Pic_label = CAMERA_PAIR_LIST[6].DeviceModule.Name;
 
+            velocityLabel.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Velocity + "";
 
             startNumPictureBox(1);
 
@@ -478,7 +497,7 @@ namespace LightConductor.Pages
                 picLabel_v1.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum - 1].Name;
                 picLabel_v2.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum].Name;
 
-
+                velocityLabel.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum - 1].DeviceModule.Velocity + "";
             }
         }
 
@@ -508,6 +527,7 @@ namespace LightConductor.Pages
             TDCHandle tdc = cameraPair_v1.VerticalTDC;
             logAllPoint(getBeforeMoveLogName(t, "up", tdc.getPosition()));
 
+            cameraPair_v1.DeviceModule.Velocity = Convert.ToDecimal(velocityLabel.Pic_label);
             Move(tdc, false);
 
             ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "up", tdc.getPosition()));
@@ -521,6 +541,7 @@ namespace LightConductor.Pages
             TDCHandle tdc = cameraPair_v1.VerticalTDC;
             logAllPoint(getBeforeMoveLogName(t, "dwon", tdc.getPosition()));
 
+            cameraPair_v1.DeviceModule.Velocity = Convert.ToDecimal(velocityLabel.Pic_label);
             Move(tdc, true);
 
             ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "dwon", tdc.getPosition()));
@@ -532,6 +553,7 @@ namespace LightConductor.Pages
             TDCHandle tdc = cameraPair_v1.HorizontalTDC;
             logAllPoint(getBeforeMoveLogName(t, "left", tdc.getPosition()));
 
+            cameraPair_v1.DeviceModule.Velocity = Convert.ToDecimal(velocityLabel.Pic_label);
             Move(tdc, true);
 
             ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "left", tdc.getPosition()));
@@ -543,6 +565,7 @@ namespace LightConductor.Pages
             TDCHandle tdc = cameraPair_v1.HorizontalTDC;
             logAllPoint(getBeforeMoveLogName(t, "right", tdc.getPosition()));
 
+            cameraPair_v1.DeviceModule.Velocity = Convert.ToDecimal(velocityLabel.Pic_label);
             Move(tdc, false);
 
             ThreadPool.QueueUserWorkItem(logAllPointThread, getAfterMoveLogName(t, "right", tdc.getPosition()));
@@ -589,9 +612,27 @@ namespace LightConductor.Pages
 
         }
 
-        private static void logAllPointThread(object o)
+        public int getTimetInterval()
         {
-            Thread.Sleep(TIME_MILLISECONDS);
+            string tbRefreshRate = UserSettings.Instance.Get(REFRESH_RATE_NAME, "" + REFRESH_RATE_DEFAULT);
+            Regex re = new Regex("^[1-9]\\d*$");
+            if (re.IsMatch(tbRefreshRate))
+            {
+                int refreshRate = Convert.ToInt32(tbRefreshRate);
+                return 60 * 1000 / refreshRate;
+            }
+            else
+            {
+                MessageBox.Show("请输入大于0的数");
+                tb_refresh_rate.Text = "" + REFRESH_RATE_DEFAULT;
+                return REFRESH_RATE_DEFAULT;
+            }
+
+        }
+
+        private void logAllPointThread(object o)
+        {
+            Thread.Sleep(getTimetInterval());
             logAllPoint((string)o);
         }
 
@@ -736,6 +777,25 @@ namespace LightConductor.Pages
         {
 
         }
+
+        private void tb_refresh_rate_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int timeInterval = getTimetInterval();
+            UserSettings.Instance.Set(REFRESH_RATE_NAME, tb_refresh_rate.Text);
+            UserSettings.Instance.Save();
+            Log.Info("更新定时任务间隔，" + timeInterval);
+            mainTimer.Interval = timeInterval;
+            //MessageBox.Show("刷新频率修改成功");
+        }
+
+        private void tb_rate_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex re = new Regex("^[0-9]\\d*$");
+            //Boolean b = Convert.ToInt32(e.Text) <= 0;
+            e.Handled = !re.IsMatch(e.Text);
+        }
+
+
     }
 
 
