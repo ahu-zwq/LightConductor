@@ -230,7 +230,7 @@ namespace LightConductor
                 lpPreviewInfo.hPlayWnd = pictureBox.Handle;//预览窗口
                 //lpPreviewInfo.lChannel = Int16.Parse(textBoxChannel.Text);//预te览的设备通道
                 lpPreviewInfo.lChannel = 1;
-                lpPreviewInfo.dwStreamType = (uint)Properties.Settings.Default.StreamType;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
+                lpPreviewInfo.dwStreamType = (uint)Properties.Settings.Default.VideoStreamType;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
                 lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
                 lpPreviewInfo.bBlocked = false; //0- 非阻塞取流，1- 阻塞取流
                 lpPreviewInfo.dwDisplayBufNum = 1; //播放库播放缓冲区最大缓冲帧数

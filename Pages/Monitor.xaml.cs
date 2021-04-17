@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Configuration;
 using System.Runtime.CompilerServices;
 using LightConductor.Properties;
+using Thorlabs.MotionControl.GenericMotorCLI;
 
 namespace LightConductor.Pages
 {
@@ -86,9 +87,28 @@ namespace LightConductor.Pages
 
             InitBinding();
 
+            AddButtonHandler();
+
             OpenAllCameraAndTDC();
 
             startTimer();
+
+        }
+
+        private void AddButtonHandler()
+        {
+
+            //btn.AddHandler(Button.MouseDownEvent, new MouseButtonEventHandler(Btn_MouseDown));
+            //btn.AddHandler(Button.MouseUpEvent, new MouseButtonEventHandler(Btn_MouseUp));
+
+            Up.AddHandler(Button.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(Btn_MouseDown));
+            Up.AddHandler(Button.PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(Btn_MouseUp));
+            Down.AddHandler(Button.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(Btn_MouseDown));
+            Down.AddHandler(Button.PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(Btn_MouseUp));
+            Left.AddHandler(Button.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(Btn_MouseDown));
+            Left.AddHandler(Button.PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(Btn_MouseUp));
+            Right.AddHandler(Button.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(Btn_MouseDown));
+            Right.AddHandler(Button.PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(Btn_MouseUp));
 
         }
 
@@ -517,6 +537,117 @@ namespace LightConductor.Pages
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             //cameraPair_v1.MainVideoHandle.btnJPEG_File(IMAGE_V1_PATH);
+        }
+
+        private Thorlabs.MotionControl.TCube.DCServoCLI.TCubeDCServo cubeDCServo;
+        private Thread th;
+        private Boolean thread_complate_flag = false;
+        private DateTime log_x_time = DateTime.Now;
+
+        private void Btn_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            string btn_name = (sender as Button).Name;
+
+            TDCHandle tDCHandle = cameraPair_v1.VerticalTDC;
+            switch (btn_name)
+            {
+                case "Up":
+                case "Down":
+                    tDCHandle = cameraPair_v1.VerticalTDC;
+                    break;
+                case "Left":
+                case "Right":
+                    tDCHandle = cameraPair_v1.HorizontalTDC;
+                    break;
+            }
+            if (tDCHandle == null)
+            {
+                return;
+            }
+            string text = velocity_tb.Text;
+            cameraPair_v1.DeviceModule.Velocity = Convert.ToDecimal(text);
+            cameraPair_v1.DeviceModule.updateConfig();
+
+            decimal v = 100;
+            try
+            {
+                v = decimal.Parse(text);
+                int direction_num = 1;
+                switch (btn_name)
+                {
+                    case "Up":
+                        direction_num = Settings.Default.Up_D;
+                        break;
+                    case "Down":
+                        direction_num = Settings.Default.Down_D;
+                        break;
+                    case "Left":
+                        direction_num = Settings.Default.Left_D;
+                        break;
+                    case "Right":
+                        direction_num = Settings.Default.Right_D;
+                        break;
+                }
+                MotorDirection direction = MotorDirection.Backward;
+                if (direction_num > 0)
+                {
+                    direction = MotorDirection.Forward;
+                }
+                else
+                {
+                    direction = MotorDirection.Backward;
+                }
+
+                try
+                {
+                    cubeDCServo = tDCHandle.MoveAsync(direction, v);
+
+                    log_x_time = DateTime.Now;
+                    logAllPoint(getBeforeMoveLogName(log_x_time, "up", tDCHandle.getPosition()));
+
+                    thread_complate_flag = false;
+                    th = new Thread(new ThreadStart(showPosition));
+                    th.Start();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                    MessageBox.Show("无法继续移动！");
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+        }
+
+
+        private void showPosition()
+        {
+            Thread.Sleep(200);
+            while (!thread_complate_flag && cubeDCServo.Status.IsMoving)
+            {
+                tdc_detail.Position = cubeDCServo.Position;
+                tdc_detail.SerialNo = cubeDCServo.SerialNo;
+                Thread.Sleep(200);
+            }
+        }
+
+
+        private void Btn_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            string name = (sender as Button).Name;
+            thread_complate_flag = true;
+
+            if (cubeDCServo != null)
+            {
+                cubeDCServo.StopImmediate();
+                tdc_detail.Position = cubeDCServo.Position;
+
+                logAllPoint(getAfterMoveLogName(log_x_time, "up", cubeDCServo.Position));
+            }
+
         }
 
 

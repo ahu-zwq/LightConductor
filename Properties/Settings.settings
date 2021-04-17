@@ -2,8 +2,26 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LightConductor.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="StreamType" Type="System.Int32" Scope="Application">
+    <Setting Name="VideoStreamType" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="MaxTDCPositon" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">2200</Value>
+    </Setting>
+    <Setting Name="MinTDCPositon" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">-63</Value>
+    </Setting>
+    <Setting Name="Up_D" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="Down_D" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Left_D" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="Right_D" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

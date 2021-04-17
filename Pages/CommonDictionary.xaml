@@ -30,13 +30,13 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="text" Property="Foreground" Value="#2f96b4"/>
+                            <Setter TargetName="text" Property="Foreground" Value="#FF99DFF3"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="text" Property="Foreground" Value="#ACACAC"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="text" Property="Foreground" Value="#2a89a4"/>
+                            <Setter TargetName="text" Property="Foreground" Value="#FF1189AC"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

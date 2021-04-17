@@ -11,6 +11,7 @@ using Thorlabs.MotionControl.GenericMotorCLI.ControlParameters;
 using System.Windows;
 using log4net;
 using System.Reflection;
+using Thorlabs.MotionControl.GenericMotorCLI;
 
 namespace LightConductor.Main
 {
@@ -98,7 +99,71 @@ namespace LightConductor.Main
                 Decimal newPos = device.Position;
                 Log.InfoFormat("*** TDC <<<<<<<<< {0} move success, now:{1}", serialNo, newPos);
             }
+        }
 
+        private static bool _taskComplete;
+        private static ulong _taskID;
+        private decimal minPosition = Properties.Settings.Default.MinTDCPositon;
+        private decimal maxPosition = Properties.Settings.Default.MaxTDCPositon;
+
+        public static void CommandCompleteFunction(ulong taskID)
+        {
+            if ((_taskID > 0) && (_taskID == taskID))
+            {
+                _taskComplete = true;
+            }
+        }
+
+        public void StopContinuousMove()
+        {
+            _taskComplete = false;
+        }
+
+        public TCubeDCServo MoveAsync(MotorDirection direction, decimal velocity)
+        {
+            if (velocity > 0)
+            {
+                //try
+                //{
+                    if (velocity != 0)
+                    {
+                        VelocityParameters velPars = device.GetVelocityParams();
+                        velPars.MaxVelocity = velocity;
+                        device.SetVelocityParams(velPars);
+                    }
+                    Decimal nowPos = device.Position;
+                    //Decimal toPos = nowPos + distance;
+                    //Log.InfoFormat("*** TDC >>>>>>>> {0} start move, from:{1}, distance:{2}, to:{3}", serialNo, nowPos, distance, toPos); -65  2208
+                    _taskComplete = false;
+                    switch (direction)
+                    {
+                        case MotorDirection.Backward:
+                            _taskID = device.MoveTo(minPosition, CommandCompleteFunction);
+                            break;
+                        case MotorDirection.Forward:
+                            _taskID = device.MoveTo(maxPosition, CommandCompleteFunction);
+                            break;
+                    }
+                    //while (!_taskComplete)
+                    //{
+                    //    Thread.Sleep(500);
+                    //    StatusBase status = device.Status;
+                    //    Console.WriteLine("Device Moving {0}", status.Position);
+
+                    //    // will need some timeout functionality;
+                    //}
+                //}
+                //catch (Exception e)
+                //{
+                    //Log.ErrorFormat("Failed to move to position, {0}", e.Message);
+                    //MessageBox.Show("无法继续移动");
+                //}
+
+                //Decimal newPos = device.Position;
+                //Log.InfoFormat("*** TDC <<<<<<<<< {0} move success, now:{1}", serialNo, newPos);
+
+            }
+            return device;
         }
 
         public Decimal getPosition()
