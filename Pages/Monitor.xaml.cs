@@ -49,7 +49,8 @@ namespace LightConductor.Pages
         //public static string IMAGE_V2_PATH = "D:\\LC\\image_v2.jpg";
         //public static string IMAGE_TEMP_PATH = "D:\\LC\\image_v2.jpg";
         //public static int TIME_MILLISECONDS = Convert.ToInt32(ConfigurationManager.AppSettings["catch_position_interval"]);
-        public static int TDC_MAX_VELOCITY = Convert.ToInt32(ConfigurationManager.AppSettings["tdc_max_velocity"]);
+        //public static int TDC_MAX_VELOCITY = Convert.ToInt32(ConfigurationManager.AppSettings["tdc_max_velocity"]);
+        public static int TDC_MAX_VELOCITY = 1000;
         public static string SPOT_LOCATIOIN_METHOD = ConfigurationManager.AppSettings["spot_location_method"];
         public static string TMP = System.Environment.GetEnvironmentVariable("TMP") + System.IO.Path.DirectorySeparatorChar + "LC" + System.IO.Path.DirectorySeparatorChar;
         public static string REFRESH_RATE_NAME = "refresh_rate";
