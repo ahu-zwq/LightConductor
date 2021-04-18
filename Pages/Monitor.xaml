@@ -283,7 +283,7 @@
                     <Grid Grid.Row="0" Grid.Column="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <!--<ColumnDefinition Width="*" />-->
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -296,19 +296,20 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition />
                             </Grid.RowDefinitions>
+
+                            <Button Content="重置基准点" Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                            <Button Content="配置更新" Grid.Row="0" Grid.Column="1"  Click="Reset_Click" IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
                         </Grid>
 
-                        <Button Content="重置基准点" Grid.Row="0" Grid.Column="0"  Click="Save_Datum_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
-
-                        <Button Content="配置更新" Grid.Row="0" Grid.Column="1"  Click="Reset_Click" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}" FontStyle="Oblique"  FontSize="15" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Button Content="手动" Grid.Row="1" Grid.Column="0" x:Name="auto_control" Click="Change_Auto_Click" FontSize="18" Height="30" Width="90" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFABABAB" />
 
 
-
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="自动模式：" FontSize="18" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
-                        <CheckBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" x:Name="auto_control" Checked="Open_Auto" Unchecked="Close_Auto" VerticalAlignment="Center" Content="OFF" Tag="ON" BorderThickness="1,1,0,1" Style="{DynamicResource CheckBoxSwitchStyle}" />
+                        <!--<TextBlock Grid.Row="1" Grid.Column="0" Text="自动模式：" FontSize="18" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>-->
+                        <!--<CheckBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" x:Name="auto_control" Checked="Open_Auto" Unchecked="Close_Auto" VerticalAlignment="Center" Content="OFF" Tag="ON" BorderThickness="1,1,0,1" Style="{DynamicResource CheckBoxSwitchStyle}" />-->
 
                         <!--<Button Content="&#xe60f;" FontFamily="/LightConductor;component/Resources/#iconfont" Foreground="#FF707070"  FontSize="50" Grid.Row="0" Grid.Column="1" Height="30" Width="60" Style="{StaticResource CheckAutoBtnStyle}" HorizontalAlignment="Left" VerticalAlignment="Center" />-->
 
@@ -331,7 +332,7 @@
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="刷新频率：" FontSize="15" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" ></TextBlock>
                         <TextBox x:Name="tb_refresh_rate" Grid.Row="0" Grid.Column="2" Height="30" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center" 
                              FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" TextChanged="tb_refresh_rate_TextChanged" PreviewTextInput="tb_rate_PreviewTextInput" InputMethod.IsInputMethodEnabled="False"
-                                 IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}"></TextBox>
+                                 IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}"></TextBox>
                         <TextBlock Grid.Row="0" Grid.Column="3" Text="次/分钟" FontSize="12" Foreground="White"  VerticalAlignment="Center" ></TextBlock>
 
 
@@ -354,7 +355,8 @@
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Path=Text, ElementName=label_v1}" FontSize="20" Foreground="#FF8DD28A" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="速率：" FontSize="15" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" ></TextBlock>
                         <TextBox x:Name="velocity_tb" Grid.Row="0" Grid.Column="2" Height="30" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput" InputMethod.IsInputMethodEnabled="False" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}"></TextBox>
+                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput" InputMethod.IsInputMethodEnabled="False" 
+                                 IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}"></TextBox>
 
                         <TextBlock Grid.Row="0" Grid.Column="3" Text="mm/s" FontSize="15" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" ></TextBlock>
 
@@ -392,13 +394,13 @@
                         <Button x:Name="Right" Click="Right_click" Grid.Row="1" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
                         </Button>-->
 
-                        <Button x:Name="Up" Grid.Row="0" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEDDB;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
+                        <Button x:Name="Up" Grid.Row="0" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEDDB;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
                         </Button>
-                        <Button x:Name="Down" Grid.Row="2" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEDDC;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
+                        <Button x:Name="Down" Grid.Row="2" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEDDC;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
                         </Button>
-                        <Button x:Name="Left" Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
+                        <Button x:Name="Left" Grid.Row="1" Grid.Column="0" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
                         </Button>
-                        <Button x:Name="Right" Grid.Row="1" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=IsChecked, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
+                        <Button x:Name="Right" Grid.Row="1" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" FontSize="70" Style="{StaticResource ControlBtnStyle}" IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}">
                         </Button>
 
 

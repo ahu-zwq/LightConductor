@@ -917,9 +917,9 @@ namespace LightConductor.Pages
 
         private void tb_refresh_rate_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int timeInterval = getTimetInterval();
             UserSettings.Instance.Set(REFRESH_RATE_NAME, tb_refresh_rate.Text);
             UserSettings.Instance.Save();
+            int timeInterval = getTimetInterval();
             Log.Info("更新定时任务间隔，" + timeInterval);
             mainTimer.Interval = timeInterval;
             //MessageBox.Show("刷新频率修改成功");
@@ -931,6 +931,53 @@ namespace LightConductor.Pages
             //Boolean b = Convert.ToInt32(e.Text) <= 0;
             e.Handled = !re.IsMatch(e.Text);
         }
+
+
+
+        private Boolean is_auto = false;
+
+        private void Change_Auto_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn_auto = sender as Button;
+            if (is_auto)
+            {
+                if (MessageBox.Show("确认切换手动模式？", "切换手动模式？", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                {
+                    is_auto = false;
+                    btn_auto.Background = new SolidColorBrush(Color.FromRgb(171, 171, 171));
+                    btn_auto.Content = "手动";
+                    btn_auto.Tag = "" + is_auto;
+
+                }
+                else
+                {
+                    return;
+                }
+
+
+            }
+            else
+            {
+                if (MessageBox.Show("确认切换自动模式？", "切换自动模式？", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                {
+                    is_auto = true;
+                    btn_auto.Background = new SolidColorBrush(Color.FromRgb(141, 210, 138));
+                    btn_auto.Content = "自动";
+                    btn_auto.Tag = "" + is_auto;
+
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+
+
+
+        }
+
+
 
 
     }

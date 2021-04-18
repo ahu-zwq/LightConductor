@@ -189,6 +189,7 @@ namespace LightConductor.Main
             {
                 device.StopPolling();
                 device.Disconnect(true);
+                HANDLE_DIC.Remove(SerialNo);
             }
         }
 
