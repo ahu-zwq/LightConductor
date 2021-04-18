@@ -8,7 +8,7 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
-        Title="Light Conductor" MinHeight="1000" MinWidth="1800" Icon="Resources/logo.ico" Background="#FF2D2D30">
+        Title="Photon Conductor" MinHeight="1000" MinWidth="1800" Icon="Resources/logo.ico" Background="#FF2D2D30">
 
 
     <TabControl HorizontalContentAlignment="Stretch" SelectionChanged="TabControl_SelectionChanged" Background="#FF323232">
