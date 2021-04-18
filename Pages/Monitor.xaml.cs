@@ -614,7 +614,7 @@ namespace LightConductor.Pages
                     Log.Error(ex.Message);
                     MessageBox.Show("无法继续移动！");
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -628,9 +628,12 @@ namespace LightConductor.Pages
             Thread.Sleep(200);
             while (!thread_complate_flag && cubeDCServo.Status.IsMoving)
             {
-                tdc_detail.Position = cubeDCServo.Position;
-                tdc_detail.SerialNo = cubeDCServo.SerialNo;
-                Thread.Sleep(200);
+                if (cubeDCServo.Position != 0)
+                {
+                    tdc_detail.Position = cubeDCServo.Position;
+                    tdc_detail.SerialNo = cubeDCServo.SerialNo;
+                    Thread.Sleep(200);
+                }
             }
         }
 
@@ -643,7 +646,10 @@ namespace LightConductor.Pages
             if (cubeDCServo != null)
             {
                 cubeDCServo.StopImmediate();
-                tdc_detail.Position = cubeDCServo.Position;
+                if (cubeDCServo.Position != 0)
+                {
+                    tdc_detail.Position = cubeDCServo.Position;
+                }
 
                 logAllPoint(getAfterMoveLogName(log_x_time, "up", cubeDCServo.Position));
             }

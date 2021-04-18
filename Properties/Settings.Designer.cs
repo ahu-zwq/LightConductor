@@ -34,7 +34,7 @@ namespace LightConductor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
         public decimal MaxTDCPositon {
             get {
                 return ((decimal)(this["MaxTDCPositon"]));
@@ -43,7 +43,7 @@ namespace LightConductor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-63")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public decimal MinTDCPositon {
             get {
                 return ((decimal)(this["MinTDCPositon"]));
