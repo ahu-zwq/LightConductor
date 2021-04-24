@@ -125,38 +125,36 @@ namespace LightConductor.Main
             {
                 //try
                 //{
-                    if (velocity != 0)
-                    {
-                        VelocityParameters velPars = device.GetVelocityParams();
-                        velPars.MaxVelocity = velocity;
-                        device.SetVelocityParams(velPars);
-                    }
-                    Decimal nowPos = device.Position;
-                    //Decimal toPos = nowPos + distance;
-                    //Log.InfoFormat("*** TDC >>>>>>>> {0} start move, from:{1}, distance:{2}, to:{3}", serialNo, nowPos, distance, toPos); -65  2208
-                    _taskComplete = false;
-                    switch (direction)
-                    {
-                        case MotorDirection.Backward:
-                            _taskID = device.MoveTo(minPosition, CommandCompleteFunction);
-                            break;
-                        case MotorDirection.Forward:
-                            _taskID = device.MoveTo(maxPosition, CommandCompleteFunction);
-                            break;
-                    }
-                    //while (!_taskComplete)
-                    //{
-                    //    Thread.Sleep(500);
-                    //    StatusBase status = device.Status;
-                    //    Console.WriteLine("Device Moving {0}", status.Position);
+                VelocityParameters velPars = device.GetVelocityParams();
+                velPars.MaxVelocity = velocity;
+                device.SetVelocityParams(velPars);
 
-                    //    // will need some timeout functionality;
-                    //}
+                Decimal nowPos = device.Position;
+                //Decimal toPos = nowPos + distance;
+                //Log.InfoFormat("*** TDC >>>>>>>> {0} start move, from:{1}, distance:{2}, to:{3}", serialNo, nowPos, distance, toPos); -65  2208
+                _taskComplete = false;
+                switch (direction)
+                {
+                    case MotorDirection.Backward:
+                        _taskID = device.MoveTo(minPosition, CommandCompleteFunction);
+                        break;
+                    case MotorDirection.Forward:
+                        _taskID = device.MoveTo(maxPosition, CommandCompleteFunction);
+                        break;
+                }
+                //while (!_taskComplete)
+                //{
+                //    Thread.Sleep(500);
+                //    StatusBase status = device.Status;
+                //    Console.WriteLine("Device Moving {0}", status.Position);
+
+                //    // will need some timeout functionality;
+                //}
                 //}
                 //catch (Exception e)
                 //{
-                    //Log.ErrorFormat("Failed to move to position, {0}", e.Message);
-                    //MessageBox.Show("无法继续移动");
+                //Log.ErrorFormat("Failed to move to position, {0}", e.Message);
+                //MessageBox.Show("无法继续移动");
                 //}
 
                 //Decimal newPos = device.Position;

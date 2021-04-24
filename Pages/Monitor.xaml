@@ -320,9 +320,9 @@
                     <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -333,7 +333,7 @@
                         <TextBox x:Name="tb_refresh_rate" Grid.Row="0" Grid.Column="2" Height="30" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center" 
                              FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" TextChanged="tb_refresh_rate_TextChanged" PreviewTextInput="tb_rate_PreviewTextInput" InputMethod.IsInputMethodEnabled="False"
                                  IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}"></TextBox>
-                        <TextBlock Grid.Row="0" Grid.Column="3" Text="次/分钟" FontSize="12" Foreground="White"  VerticalAlignment="Center" ></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="次/分钟（1-600）" FontSize="12" Foreground="White"  VerticalAlignment="Center" ></TextBlock>
 
 
                     </Grid>
@@ -343,9 +343,9 @@
                     <Grid Grid.Row="2" Grid.Column="0" Height="60" VerticalAlignment="Top" Margin="0,30,0,0" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="3*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -358,7 +358,7 @@
                              FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput" InputMethod.IsInputMethodEnabled="False" 
                                  IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}"></TextBox>
 
-                        <TextBlock Grid.Row="0" Grid.Column="3" Text="mm/s" FontSize="15" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" ></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="mm/s（1-400000）" FontSize="12" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" ></TextBlock>
 
 
                     </Grid>

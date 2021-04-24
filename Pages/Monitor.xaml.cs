@@ -566,7 +566,14 @@ namespace LightConductor.Pages
                 return;
             }
             string text = velocity_tb.Text;
-            cameraPair_v1.DeviceModule.Velocity = Convert.ToDecimal(text);
+            decimal vt = Convert.ToDecimal(text);
+            if (vt <= 0 || vt > 400000)
+            {
+                MessageBox.Show("请输入0-400000之间的速率");
+                return;
+            }
+
+            cameraPair_v1.DeviceModule.Velocity = vt;
             cameraPair_v1.DeviceModule.updateConfig();
 
             decimal v = 100;
@@ -613,7 +620,7 @@ namespace LightConductor.Pages
                 catch (Exception ex)
                 {
                     Log.Error(ex.Message);
-                    MessageBox.Show("无法继续移动！");
+                    MessageBox.Show("无法继续移动！" + ex.Message);
                 }
 
             }
@@ -641,12 +648,11 @@ namespace LightConductor.Pages
 
         private void Btn_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            string name = (sender as Button).Name;
             thread_complate_flag = true;
 
             if (cubeDCServo != null)
             {
-                cubeDCServo.StopImmediate();
+                cubeDCServo.Stop(6000);
                 if (cubeDCServo.Position != 0)
                 {
                     tdc_detail.Position = cubeDCServo.Position;
@@ -757,11 +763,17 @@ namespace LightConductor.Pages
             if (re.IsMatch(tbRefreshRate))
             {
                 int refreshRate = Convert.ToInt32(tbRefreshRate);
+                if (refreshRate <= 0 || refreshRate > 600)
+                {
+                    MessageBox.Show("请输入0-600之间的刷新频率");
+                    tb_refresh_rate.Text = "" + REFRESH_RATE_DEFAULT;
+                    return REFRESH_RATE_DEFAULT;
+                }
                 return 60 * 1000 / refreshRate;
             }
             else
             {
-                MessageBox.Show("请输入大于0的数");
+                MessageBox.Show("请输入0-600之间的刷新频率");
                 tb_refresh_rate.Text = "" + REFRESH_RATE_DEFAULT;
                 return REFRESH_RATE_DEFAULT;
             }
@@ -845,7 +857,6 @@ namespace LightConductor.Pages
             Regex re = new Regex("[^0-9.]+");
 
             e.Handled = re.IsMatch(e.Text);
-
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
@@ -921,6 +932,10 @@ namespace LightConductor.Pages
             UserSettings.Instance.Set(REFRESH_RATE_NAME, tb_refresh_rate.Text);
             UserSettings.Instance.Save();
             int timeInterval = getTimetInterval();
+            if (timeInterval <= 0)
+            {
+                return;
+            }
             Log.Info("更新定时任务间隔，" + timeInterval);
             mainTimer.Interval = timeInterval;
             //MessageBox.Show("刷新频率修改成功");
@@ -929,7 +944,7 @@ namespace LightConductor.Pages
         private void tb_rate_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex re = new Regex("^[0-9]\\d*$");
-            //Boolean b = Convert.ToInt32(e.Text) <= 0;
+            
             e.Handled = !re.IsMatch(e.Text);
         }
 
