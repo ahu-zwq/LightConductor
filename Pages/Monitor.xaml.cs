@@ -446,13 +446,13 @@ namespace LightConductor.Pages
             CAMERA_PAIR_LIST[5].TopVideoHandle.btnPreview_Click(pictureBoxHost6);
             CAMERA_PAIR_LIST[6].TopVideoHandle.btnPreview_Click(pictureBoxHost7);
 
-            picLabel_t1.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Name;
-            picLabel_t2.Pic_label = CAMERA_PAIR_LIST[1].DeviceModule.Name;
-            picLabel_t3.Pic_label = CAMERA_PAIR_LIST[2].DeviceModule.Name;
-            picLabel_t4.Pic_label = CAMERA_PAIR_LIST[3].DeviceModule.Name;
-            picLabel_t5.Pic_label = CAMERA_PAIR_LIST[4].DeviceModule.Name;
-            picLabel_t6.Pic_label = CAMERA_PAIR_LIST[5].DeviceModule.Name;
-            picLabel_t7.Pic_label = CAMERA_PAIR_LIST[6].DeviceModule.Name;
+            picLabel_t1.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[0].TopVideoHandle.errorMsg + "";
+            picLabel_t2.Pic_label = CAMERA_PAIR_LIST[1].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[1].TopVideoHandle.errorMsg + "";
+            picLabel_t3.Pic_label = CAMERA_PAIR_LIST[2].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[2].TopVideoHandle.errorMsg + "";
+            picLabel_t4.Pic_label = CAMERA_PAIR_LIST[3].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[3].TopVideoHandle.errorMsg + "";
+            picLabel_t5.Pic_label = CAMERA_PAIR_LIST[4].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[4].TopVideoHandle.errorMsg + "";
+            picLabel_t6.Pic_label = CAMERA_PAIR_LIST[5].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[5].TopVideoHandle.errorMsg + "";
+            picLabel_t7.Pic_label = CAMERA_PAIR_LIST[6].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[6].TopVideoHandle.errorMsg + "";
 
             velocityLabel.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Velocity + "";
 
@@ -634,7 +634,7 @@ namespace LightConductor.Pages
         private void showPosition()
         {
             Thread.Sleep(200);
-            while (!thread_complate_flag && cubeDCServo.Status.IsMoving)
+            while (!thread_complate_flag && cubeDCServo != null && cubeDCServo.Status.IsMoving)
             {
                 if (cubeDCServo.Position != 0)
                 {
@@ -652,12 +652,18 @@ namespace LightConductor.Pages
 
             if (cubeDCServo != null)
             {
-                cubeDCServo.Stop(6000);
-                if (cubeDCServo.Position != 0)
+                try
                 {
-                    tdc_detail.Position = cubeDCServo.Position;
+                    cubeDCServo.Stop(10000);
+                    if (cubeDCServo.Position != 0)
+                    {
+                        tdc_detail.Position = cubeDCServo.Position;
+                    }
                 }
-
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                }
                 logAllPoint(getAfterMoveLogName(log_x_time, "up", cubeDCServo.Position));
             }
 
@@ -944,7 +950,7 @@ namespace LightConductor.Pages
         private void tb_rate_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex re = new Regex("^[0-9]\\d*$");
-            
+
             e.Handled = !re.IsMatch(e.Text);
         }
 

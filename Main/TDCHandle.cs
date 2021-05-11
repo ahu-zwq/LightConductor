@@ -130,16 +130,36 @@ namespace LightConductor.Main
                 device.SetVelocityParams(velPars);
 
                 Decimal nowPos = device.Position;
+
+                //if (nowPos == minPosition || nowPos == maxPosition)
+                //{
+                //    minPosition += 1;
+                //    maxPosition -= 1;
+                //}
                 //Decimal toPos = nowPos + distance;
                 //Log.InfoFormat("*** TDC >>>>>>>> {0} start move, from:{1}, distance:{2}, to:{3}", serialNo, nowPos, distance, toPos); -65  2208
                 _taskComplete = false;
                 switch (direction)
                 {
                     case MotorDirection.Backward:
-                        _taskID = device.MoveTo(minPosition, CommandCompleteFunction);
+                        if (nowPos > minPosition)
+                        {
+                            _taskID = device.MoveTo(minPosition, CommandCompleteFunction);
+                        }
+                        else 
+                        {
+                            throw new Exception("is min");
+                        }
                         break;
                     case MotorDirection.Forward:
-                        _taskID = device.MoveTo(maxPosition, CommandCompleteFunction);
+                        if (nowPos < maxPosition)
+                        {
+                            _taskID = device.MoveTo(maxPosition, CommandCompleteFunction);
+                        }
+                        else
+                        {
+                            throw new Exception("is max");
+                        }
                         break;
                 }
                 //while (!_taskComplete)
