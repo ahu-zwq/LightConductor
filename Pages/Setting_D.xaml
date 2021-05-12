@@ -11,8 +11,37 @@
 
 
     <Grid Margin="10">
-        <DataGrid x:Name="Setting_dg" ItemsSource="{Binding}" AutoGenerateColumns="False" 
-                       SelectionMode="Single" CanUserAddRows="False" FontSize="18" >
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="password_tb" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Visibility="Visible" Margin="0,100,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="请输入密码：" FontSize="18" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" ></TextBlock>
+            <PasswordBox x:Name="password" Grid.Row="0" Grid.Column="2" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                             FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" ></PasswordBox>
+            <Button Grid.Row="0" Grid.Column="3" Content="确认" FontSize="18" Width="50"  VerticalAlignment="Center" HorizontalAlignment="Left" Click="password_val"></Button>
+
+
+        </Grid>
+
+
+        <DataGrid Grid.Row="0" Grid.Column="0" x:Name="Setting_dg" ItemsSource="{Binding}" AutoGenerateColumns="False" 
+                       SelectionMode="Single" CanUserAddRows="False" FontSize="18" Visibility="Collapsed">
 
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">

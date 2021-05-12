@@ -74,6 +74,7 @@ namespace LightConductor.Pages
         private PicLabel picLabel_t5 = new PicLabel("");
         private PicLabel picLabel_t6 = new PicLabel("");
         private PicLabel picLabel_t7 = new PicLabel("");
+        private PicLabel velocity_unit_label = new PicLabel("");
 
         private TDCDetail tdc_detail = new TDCDetail();
 
@@ -92,7 +93,7 @@ namespace LightConductor.Pages
 
             OpenAllCameraAndTDC();
 
-            startTimer();
+            //startTimer();
 
         }
 
@@ -148,6 +149,8 @@ namespace LightConductor.Pages
             labelBinding(picLabel_t6, top_label_6);
             labelBinding(picLabel_t7, top_label_7);
 
+
+            velocity_unit.SetBinding(TextBlock.TextProperty, new Binding("Pic_label") { Source = velocity_unit_label, Mode = BindingMode.OneWay });
 
             t_tdc_detail.SetBinding(TextBlock.TextProperty, new Binding("TdcDetail") { Source = tdc_detail, Mode = BindingMode.OneWay });
 
@@ -519,6 +522,8 @@ namespace LightConductor.Pages
                 picLabel_v2.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum].Name;
 
                 velocityLabel.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum - 1].DeviceModule.Velocity + "";
+
+                velocity_unit_label.Pic_label = "mm/s（0-" + CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC.getMaxVel() + "）";
             }
         }
 
@@ -567,9 +572,9 @@ namespace LightConductor.Pages
             }
             string text = velocity_tb.Text;
             decimal vt = Convert.ToDecimal(text);
-            if (vt <= 0 || vt > 400000)
+            if (vt <= 0 || vt > tDCHandle.getMaxVel())
             {
-                MessageBox.Show("请输入0-400000之间的速率");
+                MessageBox.Show("请输入0-" + tDCHandle.getMaxVel() + "之间的速率");
                 return;
             }
 

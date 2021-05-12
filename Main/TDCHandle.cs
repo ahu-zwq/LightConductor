@@ -103,8 +103,8 @@ namespace LightConductor.Main
 
         private static bool _taskComplete;
         private static ulong _taskID;
-        private decimal minPosition = Properties.Settings.Default.MinTDCPositon;
-        private decimal maxPosition = Properties.Settings.Default.MaxTDCPositon;
+        //private decimal minPosition = Properties.Settings.Default.MinTDCPositon;
+        //private decimal maxPosition = Properties.Settings.Default.MaxTDCPositon;
 
         public static void CommandCompleteFunction(ulong taskID)
         {
@@ -142,9 +142,9 @@ namespace LightConductor.Main
                 switch (direction)
                 {
                     case MotorDirection.Backward:
-                        if (nowPos > minPosition)
+                        if (nowPos > device.MotorDeviceSettings.Physical.MinPosUnit)
                         {
-                            _taskID = device.MoveTo(minPosition, CommandCompleteFunction);
+                            _taskID = device.MoveTo(device.MotorDeviceSettings.Physical.MinPosUnit, CommandCompleteFunction);
                         }
                         else 
                         {
@@ -152,9 +152,9 @@ namespace LightConductor.Main
                         }
                         break;
                     case MotorDirection.Forward:
-                        if (nowPos < maxPosition)
+                        if (nowPos < device.MotorDeviceSettings.Physical.MaxPosUnit)
                         {
-                            _taskID = device.MoveTo(maxPosition, CommandCompleteFunction);
+                            _taskID = device.MoveTo(device.MotorDeviceSettings.Physical.MaxPosUnit, CommandCompleteFunction);
                         }
                         else
                         {
@@ -195,6 +195,19 @@ namespace LightConductor.Main
                 Log.ErrorFormat("Failed getPosition, {0}", e.Message);
             }
             return -100000;
+        }
+
+        public Decimal getMaxVel()
+        {
+            try
+            {
+                return device.MotorDeviceSettings.Physical.MaxVelUnit;
+            }
+            catch (Exception e)
+            {
+                Log.ErrorFormat("Failed getPosition, {0}", e.Message);
+            }
+            return 0.1M;
         }
 
 

@@ -39,6 +39,9 @@ namespace LightConductor.Pages
         {
             InitializeComponent();
 
+            password_tb.Visibility = Visibility.Visible;
+            Setting_dg.Visibility = Visibility.Collapsed;
+
             Setting_dg.DataContext = InitDevices();
         }
 
@@ -80,6 +83,23 @@ namespace LightConductor.Pages
         {
             JsonNewtonsoft.WritingJson(SettingPath, DEVICE_LIST);
         }
+
+        private void password_val(object sender, RoutedEventArgs e)
+        {
+            bool v = password.Password.Equals(ConfigurationManager.AppSettings["setting_password"]);
+            if (v)
+            {
+                password_tb.Visibility = Visibility.Collapsed;
+                Setting_dg.Visibility = Visibility.Visible;
+            }
+            else 
+            {
+                MessageBox.Show("密码错误");
+            }
+
+
+        }
+
 
 
     }

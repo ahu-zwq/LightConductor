@@ -358,7 +358,7 @@
                              FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="tb_PreviewTextInput" InputMethod.IsInputMethodEnabled="False" 
                                  IsEnabled="{Binding Path=Tag, ElementName=auto_control, Converter={StaticResource InverseBooleanConverter}}"></TextBox>
 
-                        <TextBlock Grid.Row="0" Grid.Column="3" Text="mm/s（1-400000）" FontSize="12" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" ></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="" x:Name="velocity_unit"  FontSize="12" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" ></TextBlock>
 
 
                     </Grid>
