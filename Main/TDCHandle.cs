@@ -207,7 +207,7 @@ namespace LightConductor.Main
             {
                 Log.ErrorFormat("Failed getPosition, {0}", e.Message);
             }
-            return 0.1M;
+            return 2.6M;
         }
 
 
