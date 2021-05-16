@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.Integration;
 
 namespace LightConductor.Main
 {
@@ -16,6 +17,7 @@ namespace LightConductor.Main
         private TDCHandle verticalTDC;
         private TDCHandle horizontalTDC;
         private ImageDetail imageDetail;
+        private WindowsFormsHost videoFormsHost;
 
         public CameraPair(string id, DeviceModule deviceModule, string name, VideoHandle topVideoHandle, VideoHandle mainVideoHandle, TDCHandle verticalTDC, TDCHandle horizontalTDC)
         {
@@ -31,6 +33,7 @@ namespace LightConductor.Main
         public string Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
         public DeviceModule DeviceModule { get => deviceModule; set => deviceModule = value; }
+        public WindowsFormsHost VideoFormsHost { get => videoFormsHost; set => videoFormsHost = value; }
         internal VideoHandle TopVideoHandle { get => topVideoHandle; set => topVideoHandle = value; }
         internal VideoHandle MainVideoHandle { get => mainVideoHandle; set => mainVideoHandle = value; }
         internal TDCHandle VerticalTDC { get => verticalTDC; set => verticalTDC = value; }

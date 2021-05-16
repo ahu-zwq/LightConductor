@@ -67,13 +67,27 @@ namespace LightConductor.Pages
 
         private PicLabel velocityLabel = new PicLabel("1");
 
-        private PicLabel picLabel_t1 = new PicLabel("");
-        private PicLabel picLabel_t2 = new PicLabel("");
-        private PicLabel picLabel_t3 = new PicLabel("");
-        private PicLabel picLabel_t4 = new PicLabel("");
-        private PicLabel picLabel_t5 = new PicLabel("");
-        private PicLabel picLabel_t6 = new PicLabel("");
-        private PicLabel picLabel_t7 = new PicLabel("");
+        //private PicLabel picLabel_t1 = new PicLabel("");
+        //private PicLabel picLabel_t2 = new PicLabel("");
+        //private PicLabel picLabel_t3 = new PicLabel("");
+        //private PicLabel picLabel_t4 = new PicLabel("");
+        //private PicLabel picLabel_t5 = new PicLabel("");
+        //private PicLabel picLabel_t6 = new PicLabel("");
+        //private PicLabel picLabel_t7 = new PicLabel("");
+
+        //private PicLabel picLabelBG_t1 = new PicLabel("");
+        //private PicLabel picLabelBG_t2 = new PicLabel("");
+        //private PicLabel picLabelBG_t3 = new PicLabel("");
+        //private PicLabel picLabelBG_t4 = new PicLabel("");
+        //private PicLabel picLabelBG_t5 = new PicLabel("");
+        //private PicLabel picLabelBG_t6 = new PicLabel("");
+        //private PicLabel picLabelBG_t7 = new PicLabel("");
+
+        private List<PicLabel> picLabel_t_list = new List<PicLabel>();
+        private List<PicLabel> picLabelBG_t_list = new List<PicLabel>();
+        private List<TextBlock> topLabel_list = new List<TextBlock>();
+        private List<WindowsFormsHost> windowsForms_list = new List<WindowsFormsHost>();
+
         private PicLabel velocity_unit_label = new PicLabel("");
 
         private TDCDetail tdc_detail = new TDCDetail();
@@ -93,7 +107,7 @@ namespace LightConductor.Pages
 
             OpenAllCameraAndTDC();
 
-            //startTimer();
+            startTimer();
 
         }
 
@@ -141,13 +155,62 @@ namespace LightConductor.Pages
             //picLabel_t5 = new PicLabel("");
             //picLabel_t6 = new PicLabel("");
             //picLabel_t7 = new PicLabel("");
-            labelBinding(picLabel_t1, top_label_1);
-            labelBinding(picLabel_t2, top_label_2);
-            labelBinding(picLabel_t3, top_label_3);
-            labelBinding(picLabel_t4, top_label_4);
-            labelBinding(picLabel_t5, top_label_5);
-            labelBinding(picLabel_t6, top_label_6);
-            labelBinding(picLabel_t7, top_label_7);
+
+            UIElementCollection topSevices = top_devices.Children;
+            for (int i = 0; i < topSevices.Count; i++)
+            {
+                if (topSevices[i] is TextBlock)
+                {
+                    topLabel_list.Add(topSevices[i] as TextBlock);
+                }
+                if (topSevices[i] is WindowsFormsHost)
+                {
+                    windowsForms_list.Add(topSevices[i] as WindowsFormsHost);
+                }
+
+            }
+            //topLabel_list.Add(top_label_1);
+            //topLabel_list.Add(top_label_2);
+            //topLabel_list.Add(top_label_3);
+            //topLabel_list.Add(top_label_4);
+            //topLabel_list.Add(top_label_5);
+            //topLabel_list.Add(top_label_6);
+            //topLabel_list.Add(top_label_7);
+
+            //windowsForms_list.Add(pictureBoxHost1);
+            //windowsForms_list.Add(pictureBoxHost2);
+            //windowsForms_list.Add(pictureBoxHost3);
+            //windowsForms_list.Add(pictureBoxHost4);
+            //windowsForms_list.Add(pictureBoxHost5);
+            //windowsForms_list.Add(pictureBoxHost6);
+            //windowsForms_list.Add(pictureBoxHost7);
+
+
+            for (int i = 0; i < Setting_D.DeviceNum; i++)
+            {
+                picLabel_t_list.Add(new PicLabel(""));
+                picLabelBG_t_list.Add(new PicLabel(""));
+
+                labelBinding(picLabel_t_list[i], topLabel_list[i]);
+                labelBGBinding(picLabelBG_t_list[i], topLabel_list[i]);
+            }
+
+
+            //labelBinding(picLabel_t1, top_label_1);
+            //labelBinding(picLabel_t2, top_label_2);
+            //labelBinding(picLabel_t3, top_label_3);
+            //labelBinding(picLabel_t4, top_label_4);
+            //labelBinding(picLabel_t5, top_label_5);
+            //labelBinding(picLabel_t6, top_label_6);
+            //labelBinding(picLabel_t7, top_label_7);
+
+            //labelBGBinding(picLabelBG_t1, top_label_1);
+            //labelBGBinding(picLabelBG_t2, top_label_2);
+            //labelBGBinding(picLabelBG_t3, top_label_3);
+            //labelBGBinding(picLabelBG_t4, top_label_4);
+            //labelBGBinding(picLabelBG_t5, top_label_5);
+            //labelBGBinding(picLabelBG_t6, top_label_6);
+            //labelBGBinding(picLabelBG_t7, top_label_7);
 
 
             velocity_unit.SetBinding(TextBlock.TextProperty, new Binding("Pic_label") { Source = velocity_unit_label, Mode = BindingMode.OneWay });
@@ -182,6 +245,13 @@ namespace LightConductor.Pages
             text.SetBinding(TextBlock.TextProperty, new Binding("Pic_label") { Source = label, Mode = BindingMode.OneWay });
 
         }
+
+        private void labelBGBinding(PicLabel label, TextBlock text)
+        {
+            text.SetBinding(TextBlock.BackgroundProperty, new Binding("Pic_label") { Source = label, Mode = BindingMode.OneWay });
+
+        }
+
         private void velocityBinding(PicLabel label, TextBox text)
         {
             text.SetBinding(TextBox.TextProperty, new Binding("Pic_label") { Source = label, Mode = BindingMode.TwoWay });
@@ -441,25 +511,44 @@ namespace LightConductor.Pages
                 CAMERA_PAIR_LIST.Add(cameraPair);
             }
 
-            CAMERA_PAIR_LIST[0].TopVideoHandle.btnPreview_Click(pictureBoxHost1);
-            CAMERA_PAIR_LIST[1].TopVideoHandle.btnPreview_Click(pictureBoxHost2);
-            CAMERA_PAIR_LIST[2].TopVideoHandle.btnPreview_Click(pictureBoxHost3);
-            CAMERA_PAIR_LIST[3].TopVideoHandle.btnPreview_Click(pictureBoxHost4);
-            CAMERA_PAIR_LIST[4].TopVideoHandle.btnPreview_Click(pictureBoxHost5);
-            CAMERA_PAIR_LIST[5].TopVideoHandle.btnPreview_Click(pictureBoxHost6);
-            CAMERA_PAIR_LIST[6].TopVideoHandle.btnPreview_Click(pictureBoxHost7);
+            for (int i = 0; i < windowsForms_list.Count; i++)
+            {
+                CAMERA_PAIR_LIST[i].VideoFormsHost = windowsForms_list[i];
+                CAMERA_PAIR_LIST[i].TopVideoHandle.btnPreview_Click(windowsForms_list[i]);
+            }
 
-            picLabel_t1.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[0].TopVideoHandle.errorMsg + "";
-            picLabel_t2.Pic_label = CAMERA_PAIR_LIST[1].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[1].TopVideoHandle.errorMsg + "";
-            picLabel_t3.Pic_label = CAMERA_PAIR_LIST[2].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[2].TopVideoHandle.errorMsg + "";
-            picLabel_t4.Pic_label = CAMERA_PAIR_LIST[3].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[3].TopVideoHandle.errorMsg + "";
-            picLabel_t5.Pic_label = CAMERA_PAIR_LIST[4].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[4].TopVideoHandle.errorMsg + "";
-            picLabel_t6.Pic_label = CAMERA_PAIR_LIST[5].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[5].TopVideoHandle.errorMsg + "";
-            picLabel_t7.Pic_label = CAMERA_PAIR_LIST[6].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[6].TopVideoHandle.errorMsg + "";
+            //CAMERA_PAIR_LIST[0].VideoFormsHost = pictureBoxHost1;
+            //CAMERA_PAIR_LIST[0].TopVideoHandle.btnPreview_Click(pictureBoxHost1);
+            //CAMERA_PAIR_LIST[1].VideoFormsHost = pictureBoxHost2;
+            //CAMERA_PAIR_LIST[1].TopVideoHandle.btnPreview_Click(pictureBoxHost2);
+            //CAMERA_PAIR_LIST[2].VideoFormsHost = pictureBoxHost3;
+            //CAMERA_PAIR_LIST[2].TopVideoHandle.btnPreview_Click(pictureBoxHost3);
+            //CAMERA_PAIR_LIST[3].VideoFormsHost = pictureBoxHost4;
+            //CAMERA_PAIR_LIST[3].TopVideoHandle.btnPreview_Click(pictureBoxHost4);
+            //CAMERA_PAIR_LIST[4].VideoFormsHost = pictureBoxHost5;
+            //CAMERA_PAIR_LIST[4].TopVideoHandle.btnPreview_Click(pictureBoxHost5);
+            //CAMERA_PAIR_LIST[5].VideoFormsHost = pictureBoxHost6;
+            //CAMERA_PAIR_LIST[5].TopVideoHandle.btnPreview_Click(pictureBoxHost6);
+            //CAMERA_PAIR_LIST[6].VideoFormsHost = pictureBoxHost7;
+            //CAMERA_PAIR_LIST[6].TopVideoHandle.btnPreview_Click(pictureBoxHost7);
+
+            startNumPictureBox(1);
+
+            for (int i = 0; i < picLabel_t_list.Count; i++)
+            {
+                picLabel_t_list[i].Pic_label = CAMERA_PAIR_LIST[i].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[i].TopVideoHandle.errorMsg + "";
+            }
+
+            //picLabel_t1.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[0].TopVideoHandle.errorMsg + "";
+            //picLabel_t2.Pic_label = CAMERA_PAIR_LIST[1].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[1].TopVideoHandle.errorMsg + "";
+            //picLabel_t3.Pic_label = CAMERA_PAIR_LIST[2].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[2].TopVideoHandle.errorMsg + "";
+            //picLabel_t4.Pic_label = CAMERA_PAIR_LIST[3].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[3].TopVideoHandle.errorMsg + "";
+            //picLabel_t5.Pic_label = CAMERA_PAIR_LIST[4].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[4].TopVideoHandle.errorMsg + "";
+            //picLabel_t6.Pic_label = CAMERA_PAIR_LIST[5].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[5].TopVideoHandle.errorMsg + "";
+            //picLabel_t7.Pic_label = CAMERA_PAIR_LIST[6].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[6].TopVideoHandle.errorMsg + "";
 
             velocityLabel.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Velocity + "";
 
-            startNumPictureBox(1);
 
         }
 
@@ -488,6 +577,28 @@ namespace LightConductor.Pages
 
         }
 
+
+        private void PictureBox_Refresh(object sender, EventArgs e)
+        {
+            WaitingBox.Show(this, () =>
+            {
+                //cleanDetail();
+                System.Windows.Forms.PictureBox pictureBox = sender as System.Windows.Forms.PictureBox;
+                string PictureBoxName = pictureBox.Name;
+                string v = PictureBoxName.Split('_')[1];
+                int PictureBoxNum = int.Parse(v);
+
+                CameraPair cameraPair_now = CAMERA_PAIR_LIST[PictureBoxNum - 1];
+
+                if (cameraPair_now != null && cameraPair_now.TopVideoHandle != null)
+                {
+                    cleanTopPictureBox(cameraPair_now);
+                    cameraPair_now.TopVideoHandle.btnPreview_Click(cameraPair_now.VideoFormsHost);
+                }
+
+            });
+        }
+
         private void PictureBox_Click(object sender, EventArgs e)
         {
             WaitingBox.Show(this, () =>
@@ -507,11 +618,26 @@ namespace LightConductor.Pages
             if (!picLabel_v1.Pic_label.Equals(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name) || string.IsNullOrWhiteSpace(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name))
             {
 
-                cleanPictureBox(cameraPair_v1, pictureBoxHost_v1);
-                cleanPictureBox(cameraPair_v2, pictureBoxHost_v2);
+                cleanMainPictureBox(cameraPair_v1);
+                cleanMainPictureBox(cameraPair_v2);
 
                 cameraPair_v1 = CAMERA_PAIR_LIST[PictureBoxNum - 1];
                 cameraPair_v2 = CAMERA_PAIR_LIST[PictureBoxNum];
+
+
+                for (int i = 0; i < picLabelBG_t_list.Count; i++)
+                {
+                    if (i == PictureBoxNum || i == PictureBoxNum - 1)
+                    {
+                        picLabelBG_t_list[i].Pic_label = "Green";
+                    }
+                    else
+                    {
+                        picLabelBG_t_list[i].Pic_label = "";
+
+                    }
+                }
+
                 //tdcHandle_v = CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC;
                 //tdcHandle_h = CAMERA_PAIR_LIST[PictureBoxNum - 1].HorizontalTDC;
 
@@ -524,17 +650,44 @@ namespace LightConductor.Pages
                 velocityLabel.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum - 1].DeviceModule.Velocity + "";
 
                 velocity_unit_label.Pic_label = "mm/s（0-" + CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC.getMaxVel() + "）";
+
+
+                //refresh top
+                if (cameraPair_v1 != null && cameraPair_v1.TopVideoHandle != null)
+                {
+                    cleanTopPictureBox(cameraPair_v1);
+                    cameraPair_v1.TopVideoHandle.btnPreview_Click(cameraPair_v1.VideoFormsHost);
+                }
+                if (cameraPair_v2 != null && cameraPair_v2.TopVideoHandle != null)
+                {
+                    cleanTopPictureBox(cameraPair_v2);
+                    cameraPair_v2.TopVideoHandle.btnPreview_Click(cameraPair_v2.VideoFormsHost);
+                }
+
             }
         }
 
-        private void cleanPictureBox(CameraPair cameraPair, WindowsFormsHost pictureBoxHost)
+        private void cleanMainPictureBox(CameraPair cameraPair)
         {
-            if (cameraPair != null)
+            if (cameraPair != null && cameraPair.MainVideoHandle != null)
             {
                 //DateTime t1 = DateTime.Now;
                 cameraPair.MainVideoHandle.StopRealPlay();
                 //DateTime t2 = DateTime.Now;
                 cameraPair.MainVideoHandle.RefreshPicture();
+                //DateTime t3 = DateTime.Now;
+                //Log.InfoFormat(">>>>> StopRealPlay:{0}, RefreshPicture:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
+            }
+        }
+
+        private void cleanTopPictureBox(CameraPair cameraPair)
+        {
+            if (cameraPair != null && cameraPair.TopVideoHandle != null)
+            {
+                //DateTime t1 = DateTime.Now;
+                cameraPair.TopVideoHandle.StopRealPlay();
+                //DateTime t2 = DateTime.Now;
+                cameraPair.TopVideoHandle.RefreshPicture();
                 //DateTime t3 = DateTime.Now;
                 //Log.InfoFormat(">>>>> StopRealPlay:{0}, RefreshPicture:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
             }
@@ -1003,8 +1156,6 @@ namespace LightConductor.Pages
 
 
         }
-
-
 
 
     }
