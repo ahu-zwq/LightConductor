@@ -653,16 +653,16 @@ namespace LightConductor.Pages
 
 
                 //refresh top
-                if (cameraPair_v1 != null && cameraPair_v1.TopVideoHandle != null)
-                {
-                    cleanTopPictureBox(cameraPair_v1);
-                    cameraPair_v1.TopVideoHandle.btnPreview_Click(cameraPair_v1.VideoFormsHost);
-                }
-                if (cameraPair_v2 != null && cameraPair_v2.TopVideoHandle != null)
-                {
-                    cleanTopPictureBox(cameraPair_v2);
-                    cameraPair_v2.TopVideoHandle.btnPreview_Click(cameraPair_v2.VideoFormsHost);
-                }
+                //if (cameraPair_v1 != null && cameraPair_v1.TopVideoHandle != null)
+                //{
+                //    cleanTopPictureBox(cameraPair_v1);
+                //    cameraPair_v1.TopVideoHandle.btnPreview_Click(cameraPair_v1.VideoFormsHost);
+                //}
+                //if (cameraPair_v2 != null && cameraPair_v2.TopVideoHandle != null)
+                //{
+                //    cleanTopPictureBox(cameraPair_v2);
+                //    cameraPair_v2.TopVideoHandle.btnPreview_Click(cameraPair_v2.VideoFormsHost);
+                //}
 
             }
         }
