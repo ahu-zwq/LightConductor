@@ -25,7 +25,7 @@ namespace LightConductor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int VideoStreamType {
             get {
                 return ((int)(this["VideoStreamType"]));
@@ -34,37 +34,19 @@ namespace LightConductor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
-        public decimal MaxTDCPositon {
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int LoginOverMinutes {
             get {
-                return ((decimal)(this["MaxTDCPositon"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public decimal MinTDCPositon {
-            get {
-                return ((decimal)(this["MinTDCPositon"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int Up_D {
-            get {
-                return ((int)(this["Up_D"]));
+                return ((int)(this["LoginOverMinutes"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int Down_D {
+        public int Right_D {
             get {
-                return ((int)(this["Down_D"]));
+                return ((int)(this["Right_D"]));
             }
         }
         
@@ -80,9 +62,18 @@ namespace LightConductor.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int Right_D {
+        public int Down_D {
             get {
-                return ((int)(this["Right_D"]));
+                return ((int)(this["Down_D"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int Up_D {
+            get {
+                return ((int)(this["Up_D"]));
             }
         }
     }

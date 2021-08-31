@@ -35,6 +35,15 @@ namespace LightConductor.Pages
         public readonly static string SettingPath = ConfigurationManager.AppSettings["setting_db_path"];
         public readonly static int DeviceNum = 7;
 
+        private static DateTime LastLoginTime = new DateTime(2013, 10, 13, 19, 15, 50);
+
+        private MainWindow _parentWin;
+        public MainWindow ParentWindow
+        {
+            get { return _parentWin; }
+            set { _parentWin = value; }
+        }
+
         public Setting_D()
         {
             InitializeComponent();
@@ -89,14 +98,32 @@ namespace LightConductor.Pages
             bool v = password.Password.Equals(ConfigurationManager.AppSettings["setting_password"]);
             if (v)
             {
+                LastLoginTime = DateTime.Now;
+
                 password_tb.Visibility = Visibility.Collapsed;
                 Setting_dg.Visibility = Visibility.Visible;
+
+                password.Clear();
             }
             else 
             {
                 MessageBox.Show("密码错误");
             }
 
+
+        }
+
+
+        public void UpdateLoginTb() {
+            DateTime timeNow = DateTime.Now;
+            int subMinutes = timeNow.Subtract(LastLoginTime).Minutes;
+            
+            //如果上次登录间隔超过5分钟，则需要重新登录
+            if (subMinutes > Properties.Settings.Default.LoginOverMinutes)
+            {
+                password_tb.Visibility = Visibility.Visible;
+                Setting_dg.Visibility = Visibility.Collapsed;
+            }
 
         }
 

@@ -22,9 +22,9 @@
         <Grid x:Name="password_tb" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Visibility="Visible" Margin="0,100,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -32,7 +32,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="1" Text="请输入密码：" FontSize="18" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" ></TextBlock>
-            <PasswordBox x:Name="password" Grid.Row="0" Grid.Column="2" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" 
+            <PasswordBox x:Name="password" Grid.Row="0" Grid.Column="2" Height="30" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" 
                              FontSize="15" Block.TextAlignment="Center" VerticalContentAlignment="Center" ></PasswordBox>
             <Button Grid.Row="0" Grid.Column="3" Content="确认" FontSize="18" Width="50"  VerticalAlignment="Center" HorizontalAlignment="Left" Click="password_val"></Button>
 

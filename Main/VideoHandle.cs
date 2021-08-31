@@ -224,7 +224,20 @@ namespace LightConductor
 
         }
 
+        public static IntPtr GetPictureHandle(WindowsFormsHost windowsFormsHost) 
+        {
+            System.Windows.Forms.PictureBox pictureBox = windowsFormsHost.Child as System.Windows.Forms.PictureBox;
+            return pictureBox.Handle;
+        }
+
+
         public void btnPreview_Click(WindowsFormsHost windowsFormsHost)
+        {
+            pictureBox = windowsFormsHost.Child as System.Windows.Forms.PictureBox;
+            btnPreview_Click(pictureBox.Handle);
+        }
+
+        public void btnPreview_Click(IntPtr handle)
         {
             if (m_lUserID < 0)
             {
@@ -238,8 +251,8 @@ namespace LightConductor
             {
                 CHCNetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new CHCNetSDK.NET_DVR_PREVIEWINFO();
 
-                pictureBox = windowsFormsHost.Child as System.Windows.Forms.PictureBox;
-                lpPreviewInfo.hPlayWnd = pictureBox.Handle;//预览窗口
+                //pictureBox = windowsFormsHost.Child as System.Windows.Forms.PictureBox;
+                lpPreviewInfo.hPlayWnd = handle;//预览窗口
                 //lpPreviewInfo.lChannel = Int16.Parse(textBoxChannel.Text);//预te览的设备通道
                 lpPreviewInfo.lChannel = 1;
                 lpPreviewInfo.dwStreamType = (uint)Properties.Settings.Default.VideoStreamType;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
@@ -428,25 +441,40 @@ namespace LightConductor
 
         public void Stop()
         {
+            DateTime t1 = DateTime.Now;
             if (m_lRealHandle >= 0)
             {
                 CHCNetSDK.NET_DVR_StopRealPlay(m_lRealHandle);
             }
+
+            DateTime t2 = DateTime.Now;
+            Log.Info("cam1 : " + t2.Subtract(t1).TotalMilliseconds);
+
             if (m_lUserID >= 0)
             {
                 CHCNetSDK.NET_DVR_Logout(m_lUserID);
             }
-           
+
+            DateTime t3 = DateTime.Now;
+            Log.Info("cam2 : " + t3.Subtract(t1).TotalMilliseconds);
+
             if (pictureBox != null)
             {
                 pictureBox.Refresh();
             }
+
+            DateTime t4 = DateTime.Now;
+            Log.Info("cam3 : " + t4.Subtract(t1).TotalMilliseconds);
+
             if (HANDLE_DIC.Count > 0)
             {
                 HANDLE_DIC = new Dictionary<string, List<VideoHandle>>();
             }
 
             Dispose();
+
+            DateTime t5 = DateTime.Now;
+            Log.Info("cam4 : " + t5.Subtract(t1).TotalMilliseconds);
         }
 
         /// <summary>
@@ -454,20 +482,32 @@ namespace LightConductor
 		/// </summary>
 		public void Dispose()
         {
+            //DateTime t1 = DateTime.Now;
+
             if (m_lRealHandle >= 0)
             {
                 CHCNetSDK.NET_DVR_StopRealPlay(m_lRealHandle);
             }
+
+            //DateTime t2 = DateTime.Now;
+            //Log.Info("cam01 : " + t2.Subtract(t1).TotalMilliseconds);
+
             if (m_lUserID >= 0)
             {
                 CHCNetSDK.NET_DVR_Logout(m_lUserID);
             }
+
+            //DateTime t3 = DateTime.Now;
+            //Log.Info("cam02 : " + t3.Subtract(t1).TotalMilliseconds);
+
             if (m_bInitSDK == true)
             {
                 CHCNetSDK.NET_DVR_Cleanup();
                 m_bInitSDK = false;
             }
-            
+
+            //DateTime t4 = DateTime.Now;
+            //Log.Info("cam03 : " + t4.Subtract(t1).TotalMilliseconds);
 
         }
 
@@ -478,6 +518,15 @@ namespace LightConductor
                 pictureBox.Refresh();
             }
         }
+
+        public void RefreshPicture(System.Windows.Forms.PictureBox pictureBoxItem)
+        {
+            if (pictureBoxItem != null)
+            {
+                pictureBoxItem.Refresh();
+            }
+        }
+
 
 
         private static Dictionary<int, string> ERROR_DIC = new Dictionary<int, string>();

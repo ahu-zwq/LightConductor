@@ -12,6 +12,7 @@ using System.Windows;
 using log4net;
 using System.Reflection;
 using Thorlabs.MotionControl.GenericMotorCLI;
+using System.Runtime.CompilerServices;
 
 namespace LightConductor.Main
 {
@@ -31,6 +32,8 @@ namespace LightConductor.Main
         {
             try
             {
+                //DateTime t1 = DateTime.Now;
+
                 Log.Info("*** TDC start tdc," + serialNo);
                 this.serialNo = serialNo;
                 DeviceManagerCLI.BuildDeviceList();
@@ -41,6 +44,10 @@ namespace LightConductor.Main
                 device.StartPolling(250);
                 device.EnableDevice();
                 Thread.Sleep(500);
+
+                //DateTime t2 = DateTime.Now;
+                //Log.Info("tdc : " + t2.Subtract(t1).TotalMilliseconds);
+
             }
             catch (Exception e)
             {
@@ -52,6 +59,7 @@ namespace LightConductor.Main
         public TDCHandle()
         {
         }
+
 
         public static TDCHandle getTDCHandle(string serialNo)
         {
@@ -69,6 +77,32 @@ namespace LightConductor.Main
                 HANDLE_DIC.Add(serialNo, tDCHandle);
                 return tDCHandle;
             }
+        }
+
+
+        //[MethodImpl(MethodImplOptions.Synchronized)]
+        public static Dictionary<String, TDCHandle> getTDCHandle(HashSet<string> serialSet)
+        {
+            Dictionary<String, TDCHandle> handleMap = new Dictionary<string, TDCHandle>();
+            Parallel.ForEach(serialSet, item =>
+            {
+                if (!string.IsNullOrWhiteSpace(item))
+                {
+                    TDCHandle tDCHandle = new TDCHandle(item);
+                    handleMap.Add(item, tDCHandle);
+                }
+            });
+
+            List<string> list = handleMap.Keys.ToList();
+            list.ForEach(f =>
+            {
+                if (!HANDLE_DIC.ContainsKey(f))
+                {
+                    HANDLE_DIC.Add(f, handleMap[f]);
+                }
+            });
+
+            return handleMap;
         }
 
 
@@ -146,9 +180,9 @@ namespace LightConductor.Main
                         {
                             _taskID = device.MoveTo(device.MotorDeviceSettings.Physical.MinPosUnit, CommandCompleteFunction);
                         }
-                        else 
+                        else
                         {
-                            throw new Exception("is min");
+                            throw new Exception("已移动到最小！");
                         }
                         break;
                     case MotorDirection.Forward:
@@ -158,7 +192,7 @@ namespace LightConductor.Main
                         }
                         else
                         {
-                            throw new Exception("is max");
+                            throw new Exception("已移动到最大！");
                         }
                         break;
                 }
@@ -218,8 +252,18 @@ namespace LightConductor.Main
         {
             if (device != null)
             {
+                DateTime t1 = DateTime.Now;
+
                 device.StopPolling();
+
+                //DateTime t2 = DateTime.Now;
+                //Log.Info("tdc0 : " + t2.Subtract(t1).TotalMilliseconds);
+
                 device.Disconnect(true);
+
+                DateTime t3 = DateTime.Now;
+                Log.Info("tdc1 : " + t3.Subtract(t1).TotalMilliseconds);
+
                 HANDLE_DIC.Remove(SerialNo);
             }
         }

@@ -18,6 +18,7 @@ namespace LightConductor.Main
         private TDCHandle horizontalTDC;
         private ImageDetail imageDetail;
         private WindowsFormsHost videoFormsHost;
+        private IntPtr pictureHandle;
 
         public CameraPair(string id, DeviceModule deviceModule, string name, VideoHandle topVideoHandle, VideoHandle mainVideoHandle, TDCHandle verticalTDC, TDCHandle horizontalTDC)
         {
@@ -34,6 +35,7 @@ namespace LightConductor.Main
         public string Name { get => name; set => name = value; }
         public DeviceModule DeviceModule { get => deviceModule; set => deviceModule = value; }
         public WindowsFormsHost VideoFormsHost { get => videoFormsHost; set => videoFormsHost = value; }
+        public IntPtr PictureHandle { get => pictureHandle; set => pictureHandle = value; }
         internal VideoHandle TopVideoHandle { get => topVideoHandle; set => topVideoHandle = value; }
         internal VideoHandle MainVideoHandle { get => mainVideoHandle; set => mainVideoHandle = value; }
         internal TDCHandle VerticalTDC { get => verticalTDC; set => verticalTDC = value; }

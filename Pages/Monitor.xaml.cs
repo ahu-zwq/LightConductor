@@ -1,29 +1,22 @@
 ﻿using LightConductor.Main;
+using log4net;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
-using System.Text.RegularExpressions;
-using log4net;
-using System.Reflection;
-using System.Configuration;
-using System.Runtime.CompilerServices;
-using LightConductor.Properties;
 using Thorlabs.MotionControl.GenericMotorCLI;
 
 namespace LightConductor.Pages
@@ -55,7 +48,7 @@ namespace LightConductor.Pages
         public static string TMP = System.Environment.GetEnvironmentVariable("TMP") + System.IO.Path.DirectorySeparatorChar + "LC" + System.IO.Path.DirectorySeparatorChar;
         public static string REFRESH_RATE_NAME = "refresh_rate";
         public static int REFRESH_RATE_DEFAULT = 60;
-
+        private static string DEFAULT_BG = "#FF2D2D30";
         //光斑中心坐标
         private SpotPosition SpotPosition_v1_mark = new SpotPosition(0, 0);
         private SpotPosition SpotPosition_v1_real = new SpotPosition(0, 0);
@@ -65,7 +58,7 @@ namespace LightConductor.Pages
         private PicLabel picLabel_v1 = new PicLabel("");
         private PicLabel picLabel_v2 = new PicLabel("");
 
-        private PicLabel velocityLabel = new PicLabel("1");
+        private PicLabel velocityLabel = new PicLabel("0.1");
 
         //private PicLabel picLabel_t1 = new PicLabel("");
         //private PicLabel picLabel_t2 = new PicLabel("");
@@ -87,6 +80,9 @@ namespace LightConductor.Pages
         private List<PicLabel> picLabelBG_t_list = new List<PicLabel>();
         private List<TextBlock> topLabel_list = new List<TextBlock>();
         private List<WindowsFormsHost> windowsForms_list = new List<WindowsFormsHost>();
+        private List<IntPtr> windowsFormsHandle_list = new List<IntPtr>();
+        private IntPtr pictureHandle_v1;
+        private IntPtr pictureHandle_v2;
 
         private PicLabel velocity_unit_label = new PicLabel("");
 
@@ -105,9 +101,18 @@ namespace LightConductor.Pages
 
             AddButtonHandler();
 
-            OpenAllCameraAndTDC();
+            DateTime t1 = DateTime.Now;
+
+            //OpenAllCameraAndTDC();
+            startOpen();
+
+            DateTime t2 = DateTime.Now;
+            Log.Info("init op : " + t2.Subtract(t1).TotalMilliseconds);
 
             startTimer();
+
+            DateTime t3 = DateTime.Now;
+            Log.Info("init op2 : " + t3.Subtract(t1).TotalMilliseconds);
 
         }
 
@@ -131,6 +136,10 @@ namespace LightConductor.Pages
         private void InitBinding()
         {
             Log.Info("InitPoint");
+
+            pictureHandle_v1 = VideoHandle.GetPictureHandle(pictureBoxHost_v1);
+            pictureHandle_v2 = VideoHandle.GetPictureHandle(pictureBoxHost_v2);
+
             //SpotPosition_v1_mark = new SpotPosition(0, 0);
             //SpotPosition_v1_real = new SpotPosition(0, 0);
             pointBinding(SpotPosition_v1_mark, null, rect_v1_s, line_h_v1_s, line_v_v1_s, text_v1_s);
@@ -166,6 +175,8 @@ namespace LightConductor.Pages
                 if (topSevices[i] is WindowsFormsHost)
                 {
                     windowsForms_list.Add(topSevices[i] as WindowsFormsHost);
+
+                    windowsFormsHandle_list.Add(VideoHandle.GetPictureHandle(topSevices[i] as WindowsFormsHost));
                 }
 
             }
@@ -189,7 +200,7 @@ namespace LightConductor.Pages
             for (int i = 0; i < Setting_D.DeviceNum; i++)
             {
                 picLabel_t_list.Add(new PicLabel(""));
-                picLabelBG_t_list.Add(new PicLabel(""));
+                picLabelBG_t_list.Add(new PicLabel(DEFAULT_BG));
 
                 labelBinding(picLabel_t_list[i], topLabel_list[i]);
                 labelBGBinding(picLabelBG_t_list[i], topLabel_list[i]);
@@ -287,6 +298,18 @@ namespace LightConductor.Pages
 
         }
 
+        private void startOpen()
+        {
+            //
+            System.Timers.Timer clearTimer = new System.Timers.Timer();
+            clearTimer.Elapsed += new ElapsedEventHandler(OnTimedOpenEvent);
+            clearTimer.Interval = 1;
+            clearTimer.AutoReset = false;
+            clearTimer.Enabled = true;
+
+        }
+
+
         private void startTimer()
         {
             //main
@@ -304,10 +327,18 @@ namespace LightConductor.Pages
             clearTimer.Enabled = true;
 
         }
+
+
         private delegate void TimerDispatcherDelegate();
+
         private void OnTimedEvent(object sender, EventArgs e)
         {
             TimeAction();
+        }
+
+        private void OnTimedOpenEvent(object sender, EventArgs e)
+        {
+            OpenAllCameraAndTDC();
         }
 
         private void OnTimedEventClear(object sender, EventArgs e)
@@ -418,7 +449,9 @@ namespace LightConductor.Pages
             return imageDetailM;
         }
 
-
+        /**
+         * 清理临时目录，同步
+         */
         [MethodImpl(MethodImplOptions.Synchronized)]
         private static void ClearTMP()
         {
@@ -495,60 +528,111 @@ namespace LightConductor.Pages
         {
             Log.Info("OpenAllCameraAndTDC");
 
+            DateTime t1 = DateTime.Now;
+
             VideoHandle.Init();
 
             List<DeviceModule> DeviceList = Setting_D.GetDeviceList();
-            for (int i = 0; i < DeviceList.Count; i++)
+            //----1.0 顺序连接
+            /*            for (int i = 0; i < DeviceList.Count; i++)
+                        {
+                            DeviceModule deviceModule = DeviceList[i];
+                            VideoHandle topVideoHandle = OpenCamera(deviceModule);
+                            VideoHandle mainVideoHandle = OpenCamera(deviceModule);
+
+                            TDCHandle verticalTDC = TDCHandle.getTDCHandle(deviceModule.VerticalMotorSerialNo);
+                            TDCHandle horizontalTDC = TDCHandle.getTDCHandle(deviceModule.HorizontalMotorSerialNo);
+
+                            CameraPair cameraPair = new CameraPair(deviceModule.Id, deviceModule, deviceModule.Name, topVideoHandle, mainVideoHandle, verticalTDC, horizontalTDC);
+                            CAMERA_PAIR_LIST.Add(cameraPair);
+
+                            CAMERA_PAIR_LIST[i].PictureHandle = windowsFormsHandle_list[i];
+                            CAMERA_PAIR_LIST[i].VideoFormsHost = windowsForms_list[i];
+                            CAMERA_PAIR_LIST[i].TopVideoHandle.btnPreview_Click(windowsFormsHandle_list[i]);
+                        }*/
+
+            //----2.0  并行 先连接摄像头，再连接电机
+            Parallel.ForEach(DeviceList, deviceModule =>
             {
-                DeviceModule deviceModule = DeviceList[i];
                 VideoHandle topVideoHandle = OpenCamera(deviceModule);
                 VideoHandle mainVideoHandle = OpenCamera(deviceModule);
 
-                TDCHandle verticalTDC = TDCHandle.getTDCHandle(deviceModule.VerticalMotorSerialNo);
-                TDCHandle horizontalTDC = TDCHandle.getTDCHandle(deviceModule.HorizontalMotorSerialNo);
+                CameraPair cameraPair = new CameraPair(deviceModule.Id, deviceModule, deviceModule.Name, topVideoHandle, mainVideoHandle, null, null);
 
-                CameraPair cameraPair = new CameraPair(deviceModule.Id, deviceModule, deviceModule.Name, topVideoHandle, mainVideoHandle, verticalTDC, horizontalTDC);
+                int v = DeviceList.IndexOf(deviceModule);
+                cameraPair.PictureHandle = windowsFormsHandle_list[v];
+                cameraPair.VideoFormsHost = windowsForms_list[v];
+                cameraPair.TopVideoHandle.btnPreview_Click(windowsFormsHandle_list[v]);
+
                 CAMERA_PAIR_LIST.Add(cameraPair);
-            }
-
-            for (int i = 0; i < windowsForms_list.Count; i++)
-            {
-                CAMERA_PAIR_LIST[i].VideoFormsHost = windowsForms_list[i];
-                CAMERA_PAIR_LIST[i].TopVideoHandle.btnPreview_Click(windowsForms_list[i]);
-            }
-
-            //CAMERA_PAIR_LIST[0].VideoFormsHost = pictureBoxHost1;
-            //CAMERA_PAIR_LIST[0].TopVideoHandle.btnPreview_Click(pictureBoxHost1);
-            //CAMERA_PAIR_LIST[1].VideoFormsHost = pictureBoxHost2;
-            //CAMERA_PAIR_LIST[1].TopVideoHandle.btnPreview_Click(pictureBoxHost2);
-            //CAMERA_PAIR_LIST[2].VideoFormsHost = pictureBoxHost3;
-            //CAMERA_PAIR_LIST[2].TopVideoHandle.btnPreview_Click(pictureBoxHost3);
-            //CAMERA_PAIR_LIST[3].VideoFormsHost = pictureBoxHost4;
-            //CAMERA_PAIR_LIST[3].TopVideoHandle.btnPreview_Click(pictureBoxHost4);
-            //CAMERA_PAIR_LIST[4].VideoFormsHost = pictureBoxHost5;
-            //CAMERA_PAIR_LIST[4].TopVideoHandle.btnPreview_Click(pictureBoxHost5);
-            //CAMERA_PAIR_LIST[5].VideoFormsHost = pictureBoxHost6;
-            //CAMERA_PAIR_LIST[5].TopVideoHandle.btnPreview_Click(pictureBoxHost6);
-            //CAMERA_PAIR_LIST[6].VideoFormsHost = pictureBoxHost7;
-            //CAMERA_PAIR_LIST[6].TopVideoHandle.btnPreview_Click(pictureBoxHost7);
-
-            startNumPictureBox(1);
+            });
+            CAMERA_PAIR_LIST.Sort(delegate (CameraPair p1, CameraPair p2) { return p1.Id.CompareTo(p2.Id); });
 
             for (int i = 0; i < picLabel_t_list.Count; i++)
             {
                 picLabel_t_list[i].Pic_label = CAMERA_PAIR_LIST[i].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[i].TopVideoHandle.errorMsg + "";
             }
-
-            //picLabel_t1.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[0].TopVideoHandle.errorMsg + "";
-            //picLabel_t2.Pic_label = CAMERA_PAIR_LIST[1].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[1].TopVideoHandle.errorMsg + "";
-            //picLabel_t3.Pic_label = CAMERA_PAIR_LIST[2].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[2].TopVideoHandle.errorMsg + "";
-            //picLabel_t4.Pic_label = CAMERA_PAIR_LIST[3].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[3].TopVideoHandle.errorMsg + "";
-            //picLabel_t5.Pic_label = CAMERA_PAIR_LIST[4].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[4].TopVideoHandle.errorMsg + "";
-            //picLabel_t6.Pic_label = CAMERA_PAIR_LIST[5].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[5].TopVideoHandle.errorMsg + "";
-            //picLabel_t7.Pic_label = CAMERA_PAIR_LIST[6].DeviceModule.Name + "  " + CAMERA_PAIR_LIST[6].TopVideoHandle.errorMsg + "";
-
             velocityLabel.Pic_label = CAMERA_PAIR_LIST[0].DeviceModule.Velocity + "";
 
+            //大屏
+            startNumPictureBox(1, true);
+
+            DateTime t2 = DateTime.Now;
+            Log.Info("open : " + t2.Subtract(t1).TotalMilliseconds);
+
+            //电机
+            HashSet<string> serialSet = new HashSet<string>();
+            Parallel.ForEach(DeviceList, deviceModule =>
+            {
+                serialSet.Add(deviceModule.VerticalMotorSerialNo);
+                serialSet.Add(deviceModule.HorizontalMotorSerialNo);
+            });
+            Dictionary<String, TDCHandle> tdcMap = TDCHandle.getTDCHandle(serialSet);
+            for (int i = 0; i < DeviceList.Count; i++)
+            {
+                DeviceModule deviceModule = DeviceList[i];
+                TDCHandle verticalTDC = tdcMap[deviceModule.VerticalMotorSerialNo];
+                TDCHandle horizontalTDC = tdcMap[deviceModule.HorizontalMotorSerialNo];
+
+                CAMERA_PAIR_LIST[i].VerticalTDC = verticalTDC;
+                CAMERA_PAIR_LIST[i].HorizontalTDC = horizontalTDC;
+            };
+
+            //----3.0   并行
+            /*            HashSet<string> serialSet = new HashSet<string>();
+                        List<DeviceModule> topDeviceList = new List<DeviceModule>();
+                        List<DeviceModule> MainDeviceList = new List<DeviceModule>();
+                        Parallel.ForEach(DeviceList, deviceModule =>
+                        {
+                            topDeviceList.Add(deviceModule);
+                            MainDeviceList.Add(deviceModule);
+                            serialSet.Add(deviceModule.VerticalMotorSerialNo);
+                            serialSet.Add(deviceModule.HorizontalMotorSerialNo);
+                        });
+                        Dictionary<String, TDCHandle> tdcMap = TDCHandle.getTDCHandle(serialSet);
+                        Dictionary<string, VideoHandle> topVideoMap = OpenCamera(topDeviceList);
+                        Dictionary<string, VideoHandle> mainVideoMap = OpenCamera(MainDeviceList);
+
+                        CAMERA_PAIR_LIST = new List<CameraPair>(DeviceList.Count);
+                        for (int i = 0; i < DeviceList.Count; i++)
+                        {
+                            DeviceModule deviceModule = DeviceList[i];
+                            VideoHandle topVideoHandle = topVideoMap[deviceModule.Id];
+                            VideoHandle mainVideoHandle = mainVideoMap[deviceModule.Id];
+
+                            TDCHandle verticalTDC = tdcMap[deviceModule.VerticalMotorSerialNo];
+                            TDCHandle horizontalTDC = tdcMap[deviceModule.HorizontalMotorSerialNo];
+
+                            CameraPair cameraPair = new CameraPair(deviceModule.Id, deviceModule, deviceModule.Name, topVideoHandle, mainVideoHandle, verticalTDC, horizontalTDC);
+
+                            CAMERA_PAIR_LIST.Add(cameraPair);
+
+                            CAMERA_PAIR_LIST[i].PictureHandle = windowsFormsHandle_list[i];
+                            CAMERA_PAIR_LIST[i].TopVideoHandle.btnPreview_Click(windowsFormsHandle_list[i]);
+                        };*/
+
+            DateTime t3 = DateTime.Now;
+            Log.Info("open2 : " + t3.Subtract(t1).TotalMilliseconds);
 
         }
 
@@ -557,10 +641,35 @@ namespace LightConductor.Pages
 
         private VideoHandle OpenCamera(DeviceModule device)
         {
+            //DateTime t1 = DateTime.Now;
+
             VideoHandle videoHandle = VideoHandle.GetVideoHandle(device.CameraIp);
             videoHandle.Login(device.CameraIp, device.CameraPort, device.CameraUserName, device.CameraPassword);
+
+            //DateTime t2 = DateTime.Now;
+            //Log.Info("camera : " + t2.Subtract(t1).TotalMilliseconds);
+
             return videoHandle;
         }
+
+        private Dictionary<String, VideoHandle> OpenCamera(List<DeviceModule> deviceList)
+        {
+            Dictionary<String, VideoHandle> handleMap = new Dictionary<string, VideoHandle>();
+            Parallel.ForEach(deviceList, device =>
+            {
+                //DateTime t1 = DateTime.Now;
+
+                VideoHandle videoHandle = VideoHandle.GetVideoHandle(device.CameraIp);
+                videoHandle.Login(device.CameraIp, device.CameraPort, device.CameraUserName, device.CameraPassword);
+
+                //DateTime t3 = DateTime.Now;
+                //Log.Info("camera1 : " + t3.Subtract(t1).TotalMilliseconds);
+
+                handleMap.Add(device.Id, videoHandle);
+            });
+            return handleMap;
+        }
+
 
         //private TDCHandle OpenTDC(string serialNo)
         //{
@@ -593,7 +702,7 @@ namespace LightConductor.Pages
                 if (cameraPair_now != null && cameraPair_now.TopVideoHandle != null)
                 {
                     cleanTopPictureBox(cameraPair_now);
-                    cameraPair_now.TopVideoHandle.btnPreview_Click(cameraPair_now.VideoFormsHost);
+                    cameraPair_now.TopVideoHandle.btnPreview_Click(cameraPair_now.PictureHandle);
                 }
 
             });
@@ -613,13 +722,19 @@ namespace LightConductor.Pages
 
         }
 
+
         private void startNumPictureBox(int PictureBoxNum)
         {
-            if (!picLabel_v1.Pic_label.Equals(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name) || string.IsNullOrWhiteSpace(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name))
+            startNumPictureBox(PictureBoxNum, false);
+        }
+
+        private void startNumPictureBox(int PictureBoxNum, Boolean IsAsync)
+        {
+            if (CAMERA_PAIR_LIST.Count > PictureBoxNum && (!picLabel_v1.Pic_label.Equals(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name) || string.IsNullOrWhiteSpace(CAMERA_PAIR_LIST[PictureBoxNum - 1].Name)))
             {
 
-                cleanMainPictureBox(cameraPair_v1);
-                cleanMainPictureBox(cameraPair_v2);
+                cleanMainPictureBox(cameraPair_v1, IsAsync, pictureBoxHost_v1);
+                cleanMainPictureBox(cameraPair_v2, IsAsync, pictureBoxHost_v2);
 
                 cameraPair_v1 = CAMERA_PAIR_LIST[PictureBoxNum - 1];
                 cameraPair_v2 = CAMERA_PAIR_LIST[PictureBoxNum];
@@ -629,11 +744,11 @@ namespace LightConductor.Pages
                 {
                     if (i == PictureBoxNum || i == PictureBoxNum - 1)
                     {
-                        picLabelBG_t_list[i].Pic_label = "Green";
+                        picLabelBG_t_list[i].Pic_label = Colors.Green.ToString();
                     }
                     else
                     {
-                        picLabelBG_t_list[i].Pic_label = "";
+                        picLabelBG_t_list[i].Pic_label = DEFAULT_BG;
 
                     }
                 }
@@ -641,15 +756,22 @@ namespace LightConductor.Pages
                 //tdcHandle_v = CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC;
                 //tdcHandle_h = CAMERA_PAIR_LIST[PictureBoxNum - 1].HorizontalTDC;
 
-                cameraPair_v1.MainVideoHandle.btnPreview_Click(pictureBoxHost_v1);
-                cameraPair_v2.MainVideoHandle.btnPreview_Click(pictureBoxHost_v2);
+                cameraPair_v1.MainVideoHandle.btnPreview_Click(pictureHandle_v1);
+                cameraPair_v2.MainVideoHandle.btnPreview_Click(pictureHandle_v2);
 
                 picLabel_v1.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum - 1].Name;
                 picLabel_v2.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum].Name;
 
                 velocityLabel.Pic_label = CAMERA_PAIR_LIST[PictureBoxNum - 1].DeviceModule.Velocity + "";
 
-                velocity_unit_label.Pic_label = "mm/s（0-" + CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC.getMaxVel() + "）";
+                if (CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC != null)
+                {
+                    velocity_unit_label.Pic_label = "mm/s（0-" + CAMERA_PAIR_LIST[PictureBoxNum - 1].VerticalTDC.getMaxVel() + "）";
+                }
+                else
+                {
+                    velocity_unit_label.Pic_label = "mm/s（0-2.6)";
+                }
 
 
                 //refresh top
@@ -667,14 +789,22 @@ namespace LightConductor.Pages
             }
         }
 
-        private void cleanMainPictureBox(CameraPair cameraPair)
+        private void cleanMainPictureBox(CameraPair cameraPair, Boolean IsAsync, WindowsFormsHost windowsFormsHost)
         {
             if (cameraPair != null && cameraPair.MainVideoHandle != null)
             {
                 //DateTime t1 = DateTime.Now;
                 cameraPair.MainVideoHandle.StopRealPlay();
                 //DateTime t2 = DateTime.Now;
-                cameraPair.MainVideoHandle.RefreshPicture();
+
+                if (IsAsync)
+                {
+                    cameraPair.MainVideoHandle.RefreshPicture();
+                }
+                else
+                {
+                    cameraPair.MainVideoHandle.RefreshPicture(windowsFormsHost.Child as System.Windows.Forms.PictureBox);
+                }
                 //DateTime t3 = DateTime.Now;
                 //Log.InfoFormat(">>>>> StopRealPlay:{0}, RefreshPicture:{1}", DateUtils.DateDiff(t2, t1), DateUtils.DateDiff(t3, t2));
             }
@@ -703,8 +833,15 @@ namespace LightConductor.Pages
         private Boolean thread_complate_flag = false;
         private DateTime log_x_time = DateTime.Now;
 
+        /**
+         * 按钮，开始移动
+         */
         private void Btn_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (cameraPair_v1 == null || cameraPair_v1.VerticalTDC == null)
+            {
+                MessageBox.Show("电机未连接");
+            }
             string btn_name = (sender as Button).Name;
 
             TDCHandle tDCHandle = cameraPair_v1.VerticalTDC;
@@ -737,21 +874,23 @@ namespace LightConductor.Pages
             decimal v = 100;
             try
             {
+                //判断方向
                 v = decimal.Parse(text);
                 int direction_num = 1;
+
                 switch (btn_name)
                 {
                     case "Up":
-                        direction_num = Settings.Default.Up_D;
+                        direction_num = cameraPair_v1.DeviceModule.VerticalSpotRel;
                         break;
                     case "Down":
-                        direction_num = Settings.Default.Down_D;
-                        break;
-                    case "Left":
-                        direction_num = Settings.Default.Left_D;
+                        direction_num = cameraPair_v1.DeviceModule.VerticalSpotRel * -1;
                         break;
                     case "Right":
-                        direction_num = Settings.Default.Right_D;
+                        direction_num = cameraPair_v1.DeviceModule.HorizontalSpotRel;
+                        break;
+                    case "Left":
+                        direction_num = cameraPair_v1.DeviceModule.HorizontalSpotRel * -1;
                         break;
                 }
                 MotorDirection direction = MotorDirection.Backward;
@@ -791,10 +930,11 @@ namespace LightConductor.Pages
 
         private void showPosition()
         {
-            Thread.Sleep(200);
-            while (!thread_complate_flag && cubeDCServo != null && cubeDCServo.Status.IsMoving)
+            //Thread.Sleep(200);
+            //while (!thread_complate_flag && cubeDCServo != null && cubeDCServo.Status.IsMoving)
+            while (!thread_complate_flag && cubeDCServo != null)
             {
-                if (cubeDCServo.Position != 0)
+                if (cubeDCServo.Position != 0 && cubeDCServo.Status.IsMoving)
                 {
                     tdc_detail.Position = cubeDCServo.Position;
                     tdc_detail.SerialNo = cubeDCServo.SerialNo;
@@ -803,7 +943,9 @@ namespace LightConductor.Pages
             }
         }
 
-
+        /**
+         * 按钮，停止移动
+         */
         private void Btn_MouseUp(object sender, MouseButtonEventArgs e)
         {
             thread_complate_flag = true;
@@ -812,7 +954,8 @@ namespace LightConductor.Pages
             {
                 try
                 {
-                    cubeDCServo.Stop(10000);
+                    //cubeDCServo.Stop(500);
+                    cubeDCServo.StopImmediate();
                     if (cubeDCServo.Position != 0)
                     {
                         tdc_detail.Position = cubeDCServo.Position;
@@ -1029,7 +1172,11 @@ namespace LightConductor.Pages
             WaitingBox.Show(this, () =>
             {
                 CloseAllCameraAndTDC();
-                OpenAllCameraAndTDC();
+
+                cleanMainPictureBox(cameraPair_v1, false, pictureBoxHost_v1);
+                cleanMainPictureBox(cameraPair_v2, false, pictureBoxHost_v2);
+                //OpenAllCameraAndTDC();
+                startOpen();
             });
 
         }
@@ -1040,23 +1187,60 @@ namespace LightConductor.Pages
         {
             Log.Info("CloseAllCameraAndTDC");
 
-            for (int i = 0; i < CAMERA_PAIR_LIST.Count; i++)
+            DateTime t1 = DateTime.Now;
+
+            //for (int i = 0; i < CAMERA_PAIR_LIST.Count; i++)
+            //{
+            //    try
+            //    {
+            //        CameraPair cameraPair = CAMERA_PAIR_LIST[i];
+            //        cameraPair.TopVideoHandle.Stop();
+            //        cameraPair.MainVideoHandle.Stop();
+            //        cameraPair.VerticalTDC.Dispose();
+            //        cameraPair.HorizontalTDC.Dispose();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Log.Error(e);
+            //    }
+            //}
+
+            List<Task> tasks = new List<Task>();
+            Parallel.ForEach(CAMERA_PAIR_LIST, item =>
             {
                 try
                 {
-                    CameraPair cameraPair = CAMERA_PAIR_LIST[i];
-                    cameraPair.TopVideoHandle.Stop();
-                    cameraPair.MainVideoHandle.Stop();
-                    cameraPair.VerticalTDC.Dispose();
-                    cameraPair.HorizontalTDC.Dispose();
+                    CameraPair cameraPair = item;
+
+                    Task ta = new Task(() => { if (cameraPair.TopVideoHandle != null) { cameraPair.TopVideoHandle.Stop(); } });
+                    Task tb = new Task(() => { if (cameraPair.MainVideoHandle != null) { cameraPair.MainVideoHandle.Stop(); } });
+                    Task tc = new Task(() => { if (cameraPair.VerticalTDC != null) { cameraPair.VerticalTDC.Dispose(); } });
+                    Task td = new Task(() => { if (cameraPair.HorizontalTDC != null) { cameraPair.HorizontalTDC.Dispose(); } });
+
+                    tasks.Add(ta);
+                    tasks.Add(tb);
+                    tasks.Add(tc);
+                    tasks.Add(td);
+
                 }
                 catch (Exception e)
                 {
                     Log.Error(e);
                 }
-            }
+            });
+
+
+            Parallel.ForEach(tasks, t => t.Start());
+
+            Task.WaitAll(tasks.ToArray());
+
+
+
             cleanDetail();
             CAMERA_PAIR_LIST = new List<CameraPair>();
+
+            DateTime t2 = DateTime.Now;
+            Log.Info("close 1 : " + t2.Subtract(t1).TotalMilliseconds);
 
         }
 

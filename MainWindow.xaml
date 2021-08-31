@@ -18,7 +18,8 @@
         </TabItem>
 
         <TabItem Header="   设置   " FontSize="15" >
-            <Frame Source="/LightConductor;component/Pages/Setting_D.xaml"/>
+            <!--<Frame Source="/LightConductor;component/Pages/Setting_D.xaml"/>-->
+            <Frame Name="SettingTab" NavigationUIVisibility="Hidden"></Frame>
         </TabItem>
     </TabControl>
 

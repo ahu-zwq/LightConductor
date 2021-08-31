@@ -46,9 +46,23 @@ namespace LightConductor
 
         }
 
+        private Pages.Setting_D Setting_D;
+
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+            string tabItem = ((sender as TabControl).SelectedItem as TabItem).Header as string;
+            if (tabItem.Contains("设置")) {
+
+                //this.SettingTab.Navigate(new Uri("Pages/Setting_D.xaml", UriKind.Relative));
+                if (Setting_D == null) { 
+                    Setting_D = new Pages.Setting_D();
+                }
+                this.SettingTab.Content = Setting_D;
+                Setting_D.ParentWindow = this;
+
+                Setting_D.UpdateLoginTb();
+            }
+         
         }
     }
 }

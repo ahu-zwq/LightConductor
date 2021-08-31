@@ -14,9 +14,12 @@ namespace LightConductor
     public class DeviceModule : INotifyPropertyChanged, IEditableObject
     {
         public static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private string id;
         private string name;
+        //垂直方向电机序列号
         private string verticalMotorSerialNo;
+        //水平方向电机序列号
         private string horizontalMotorSerialNo;
         private string cameraIp;
         private string cameraPort;
@@ -26,6 +29,9 @@ namespace LightConductor
         private double datum_y;
         private string datum_pos;
         private decimal velocity;
+        //在setting_db.json中修改
+        private int verticalSpotRel = 1;
+        private int horizontalSpotRel = 1;
 
         public string Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
@@ -94,6 +100,9 @@ namespace LightConductor
                 }
             }
         }
+
+        public int VerticalSpotRel { get => verticalSpotRel; set => verticalSpotRel = value; }
+        public int HorizontalSpotRel { get => horizontalSpotRel; set => horizontalSpotRel = value; }
 
         public static DeviceModule getEmptyDevice()
         {
